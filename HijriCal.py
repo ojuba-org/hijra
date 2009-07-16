@@ -9,7 +9,7 @@ the algorithm is discussed in a book titled "حتى لا ندخل جحور ال�
 
 This file can be used to implement apps, gdesklets or karamba ..etc
 
-The algorith itself is not here, it's in another file called hijri.py
+The algorith itself is not here, it's in another file called hijra.py
 
     Released under terms on Waqf Public License.
     This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@ The algorith itself is not here, it's in another file called hijri.py
 
 """
 from time import localtime
-from hijri import *
+from hijra import *
 class HijriCal:
    """a Class that provide a high level Islamic Hijri calendar API"""
    def __init__(self):

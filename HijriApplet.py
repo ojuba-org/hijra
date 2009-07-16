@@ -8,7 +8,7 @@ Based on an enhanced algorithm designed by me
 the algorithm is discussed in a book titled "حتى لا ندخل جحور الضباب"
 (not yet published)
 
-The algorith itself is not here, it's in another file called hijri.py
+The algorith itself is not here, it's in another file called hijra.py
 
 
     Released under terms on Waqf Public License.

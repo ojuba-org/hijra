@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Hijra Applet
 Name[ar]=بريمج هجرة
 Comment=Hijri calendar in system tray icon
@@ -10,5 +9,5 @@ Type=Application
 Icon=gnome-calendar
 X-KDE-autostart-after=panel
 StartupNotify=false
-Categories=GTK;Monitor;System;X-Red-Hat-Base;
+Categories=X-Islamic-Software;System;
 

@@ -9,5 +9,5 @@ Type=Application
 Icon=gnome-calendar
 X-KDE-autostart-after=panel
 StartupNotify=false
-Categories=X-Islamic-Software;Accessories;
+Categories=X-Islamic-Software;Utility;
 

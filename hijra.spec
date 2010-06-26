@@ -57,8 +57,6 @@ provided by python-hijra package
 %install
 rm -rf $RPM_BUILD_ROOT
 
-mv HijriApplet.py HijriApplet
-chmod +x HijriApplet
 %{__python} setup.py install \
         --root=$RPM_BUILD_ROOT \
         --optimize=2

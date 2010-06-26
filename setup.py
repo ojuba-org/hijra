@@ -11,8 +11,8 @@ setup (name='hijra', version='0.1',
       url='http://hijra.ojuba.org/',
       license='Waqf',
       py_modules=['hijra','HijriCal'],
+      scripts=['HijriApplet'],
       data_files=[('/usr/share/doc/hijra-python', glob('*.html') ),
-                  ('/usr/bin',['HijriApplet']),
                   ('/etc/xdg/autostart',['hijra-autostart.desktop']),
       ]
 )

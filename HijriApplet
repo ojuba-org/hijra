@@ -46,7 +46,7 @@ except ImportError: pass
 import time
 import pango
 import gobject
-import egg.trayicon
+#import egg.trayicon
 import sys
 try: import pynotify
 except ImportError: pass
@@ -111,11 +111,13 @@ def main():
 	except: pass
 	Y,M,D,W=cal.today
 	yy,mm,dd=cal.g_today
-	tr = egg.trayicon.TrayIcon("HijriApplet")
+	tr = gtk.StatusIcon ()
 	box = gtk.EventBox()
 	l=gtk.Label()
 	l.set_markup('<span size="small" weight="bold" foreground="red" background="#ffffff">%02d</span>\n<span size="small" weight="bold" foreground="yellow" background="black">%02d</span>' % (D, M))
-	tr.add(box)
+	tr.connect ('button-press-event', clicked_cb)
+	tr.set_from_icon_name("stock_calendar")
+	tr.set_title("التقويم الهجري")
 	box.add(l)
 	try: box.set_tooltip_text("Waiting ...")
 	except AttributeError: tips=gtk.Tooltips()
@@ -124,7 +126,7 @@ def main():
 	#notify.attach_to_widget(w) # whats wrong with it
 	#notify.set_property('attach-widget',box)
 	try:
-		notify.set_property('icon-name','gtk-info')
+		notify.set_property('icon-name','gtk-dialog-info')
 		notify.set_property('summary', "التقويم الهجري" )
 		notify.set_property('body', "%s, %d من %s لعام %d\nالموافق %d من %s لعام %s" % (week_days[W], D, months[M-1], Y,dd,gmonths[mm-1],yy) )
 		notify.show()
@@ -135,7 +137,7 @@ def main():
 	#update_cb()
 	gobject.timeout_add(5000, update_cb)
 
-	tr.show_all()
+	#tr.show_all()
 	build_gui()
 	#print "Done"
 	gtk.main()
@@ -208,7 +210,7 @@ def get_theme_colors():
 def build_gui():
 	global cell,days_l,win,accel,title,g_e,h_e,current_l
 	accel=gtk.AccelGroup()
-	gtk.window_set_default_icon_name('gnome-calendar')
+	gtk.window_set_default_icon_name('stock_calendar')
 	win = gtk.Window(); win.set_title('التقويم الهجري')
 	win.add_accel_group(accel)
 	win.hide_on_delete()

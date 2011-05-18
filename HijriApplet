@@ -144,6 +144,9 @@ def main():
 	if svg_fn: tr.set_from_file(svg_fn)
 	else: tr.set_from_icon_name("stock_calendar")
 	tr.set_title("التقويم الهجري")
+	# Show new Title
+	tr.set_visible(False)
+	tr.set_visible(True)
 	box.add(l)
 	try: box.set_tooltip_text("Waiting ...")
 	except AttributeError: tips=gtk.Tooltips()
@@ -440,9 +443,12 @@ def setup_popup_menu():
 	
 	i = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
         i.connect('activate', about_cb)
+        i.set_always_show_image(True)
+        #i.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT,gtk.ICON_SIZE_MENU))
         popup_menu.add(i)
 	i = gtk.ImageMenuItem(gtk.STOCK_QUIT)
         i.connect('activate', gtk.main_quit)
+        i.set_always_show_image(True)
         popup_menu.add(i)
 #def direction_cb(widget, *args):
 #	cal.set_direction(widget.get_active()*2-1)
@@ -466,10 +472,10 @@ def jump_cb(widget, *args):
 	update_gui()
 
 def clicked_cb(widget, event):
-	
-	if event.button == 1:
-	  if not g_e.get_property('visible'): win.show_all(); update_gui(); return # this case happens once to init the GUI
-	  win.set_property("visible", not win.get_property("visible"))
+	# Edited: Left click will be show notify
+	if event.button == 1: notify.show(); return
+	  #if not g_e.get_property('visible'): notify.show(); return # this case happens once to init the GUI
+	  #win.set_property("visible", not win.get_property("visible"))
 	if event.button == 3: show_popup_menu()
 
 def show_cb(*args):
@@ -481,6 +487,7 @@ def about_cb(*args):
 	about_dlg.run()
 	
 def show_popup_menu():
+    #FIXME: Correct popupmenu position
 	global popup_menu
         popup_menu.show_all()
 	popup_menu.popup(None, None, None, 3, gtk.get_current_event_time())

@@ -476,7 +476,7 @@ def clicked_cb(widget, event):
 	if event.button == 1: notify.show(); return
 	  #if not g_e.get_property('visible'): notify.show(); return # this case happens once to init the GUI
 	  #win.set_property("visible", not win.get_property("visible"))
-	if event.button == 3: show_popup_menu()
+	if event.button == 3: show_popup_menu(widget)
 
 def show_cb(*args):
   if not g_e.get_property('visible'): win.show_all(); update_gui()
@@ -486,11 +486,14 @@ def about_cb(*args):
 	global about_dlg
 	about_dlg.run()
 	
-def show_popup_menu():
+def show_popup_menu(icon):
     #FIXME: Correct popupmenu position
-	global popup_menu
-        popup_menu.show_all()
-	popup_menu.popup(None, None, None, 3, gtk.get_current_event_time())
+    #Position fixed, Hide And Show Menu Items done too
+	global popup_menu, win
+	popup_menu.show_all()
+	if win.get_visible(): popup_menu.get_children()[0].hide()
+	else: popup_menu.get_children()[1].hide()
+	popup_menu.popup(None, None, gtk.status_icon_position_menu, 3, gtk.get_current_event_time(), icon)
 
 def set_tip(w,txt):
    global tips

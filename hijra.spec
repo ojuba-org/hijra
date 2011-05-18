@@ -72,6 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 %files applet
 %doc readme-ar.html LICENSE-ar.txt LICENSE-en
 /usr/bin/*
+/usr/share/hijra/*
 /etc/xdg/autostart/*
 %changelog
 * Sat Feb 14 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.18-1

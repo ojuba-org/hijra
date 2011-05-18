@@ -13,6 +13,7 @@ setup (name='hijra', version='0.1',
       py_modules=['hijra','HijriCal'],
       scripts=['HijriApplet'],
       data_files=[('/usr/share/doc/hijra-python', glob('*.html') ),
+                  ('/usr/share/hijra/hijra-data',['hijra-data/cal-template.svg']),
                   ('/etc/xdg/autostart',['hijra-autostart.desktop']),
       ]
 )

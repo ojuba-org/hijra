@@ -51,6 +51,30 @@ import sys
 try: import pynotify
 except ImportError: pass
 
+import re
+import os.path
+
+def guess_data_dir():
+  d=os.path.dirname(__file__)
+  dd=os.path.join(d, '..', 'share', 'hijra', 'hijra-data')
+  if os.path.isdir(dd): return dd
+  dd=os.path.join(d, 'hijra-data')
+  return dd
+
+# Update icon file
+#FIXME:Auto update if new day comes while running
+def update_icon_file(day,mth):
+	svg_fn = os.path.join(guess_data_dir(), "cal-template.svg")
+	if not os.path.isfile(svg_fn): return False
+	out_fn = os.path.expanduser('~/.hijra-icon.svg')
+	day_re = re.compile(r"""<!--// DAY STARTS HERE //-->(\d+)<!--// DAY ENDS HERE //-->""", re.M)
+	mth_re = re.compile(r"""<!--// MONTH STARTS HERE //-->(\d+)<!--// MONTH ENDS HERE //-->""", re.M)
+	svg_text = open(svg_fn, 'rt').read()
+	svg_text, n = mth_re.subn("%02d" % mth, svg_text)
+	svg_text, n = day_re.subn("%02d" % day, svg_text)
+	try: open(out_fn, 'wt+').write(svg_text)
+	except: return False
+	return out_fn
 
 # use dbus so that, only one Applet is shown
 def init_dbus():
@@ -116,7 +140,9 @@ def main():
 	l=gtk.Label()
 	l.set_markup('<span size="small" weight="bold" foreground="red" background="#ffffff">%02d</span>\n<span size="small" weight="bold" foreground="yellow" background="black">%02d</span>' % (D, M))
 	tr.connect ('button-press-event', clicked_cb)
-	tr.set_from_icon_name("stock_calendar")
+	svg_fn=update_icon_file(D,M)
+	if svg_fn: tr.set_from_file(svg_fn)
+	else: tr.set_from_icon_name("stock_calendar")
 	tr.set_title("التقويم الهجري")
 	box.add(l)
 	try: box.set_tooltip_text("Waiting ...")
@@ -138,7 +164,7 @@ def main():
 	gobject.timeout_add(5000, update_cb)
 
 	#tr.show_all()
-	build_gui()
+	build_gui(svg_fn)
 	#print "Done"
 	gtk.main()
 def update_cb(*args):
@@ -146,6 +172,9 @@ def update_cb(*args):
 	if (cal.refresh_today()):
 	  y,m,d,w=cal.today
 	  print y,m,d,w
+	  svg_fn=update_icon_file(d,m)
+	  if svg_fn: tr.set_from_file(svg_fn)
+	  else: tr.set_from_icon_name("stock_calendar")
 	  l.set_markup('<span size="small" weight="bold" foreground="red" background="#ffffff">%02d</span>\n<span size="small" weight="bold" foreground="yellow" background="black">%02d</span>' % (d, m))
 	  set_tip(box, "%s, %d من %s لعام %d" % (week_days[w], d, months[m-1], y))
 	  update_gui()
@@ -207,10 +236,11 @@ def get_theme_colors():
 	  colors[1][i]=fg,bg,fg.to_string(),bg.to_string()
 	  #print i,bg.to_string(),fg.to_string()
 
-def build_gui():
+def build_gui(svg_fn):
 	global cell,days_l,win,accel,title,g_e,h_e,current_l
 	accel=gtk.AccelGroup()
-	gtk.window_set_default_icon_name('stock_calendar')
+	if svg_fn: gtk.window_set_default_icon_from_file(svg_fn)
+	else: gtk.window_set_default_icon_name('stock_calendar')
 	win = gtk.Window(); win.set_title('التقويم الهجري')
 	win.add_accel_group(accel)
 	win.hide_on_delete()

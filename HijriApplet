@@ -293,6 +293,7 @@ class CalWindow(gtk.Window):
       self.cal.set_direction(-1) # LTR
     else:
       self.cal.set_direction(1) # RTL
+    self.update()
 
   def show(self):
     r=super(gtk.Window, self).show()
@@ -325,6 +326,7 @@ class CalStatusIcon(gtk.StatusIcon):
     self.win=CalWindow(cal)
     self.set_visible(True)
     self.setup_popup_menu()
+    if not '--hidden' in sys.argv: self.win.show_all()
     gobject.timeout_add(5000, self.update)
 
   def update(self):
@@ -429,9 +431,6 @@ def init_dbus():
 def main():
   init_dbus()
   st=CalStatusIcon(cal)
-  st.win.show_all()
-  st.update()
-  st.win.update()
   gtk.main()
 
 main()

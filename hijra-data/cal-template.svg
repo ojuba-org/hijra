@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="cal2.svg">
+   sodipodi:docname="cal-template.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -25,9 +25,9 @@
          offset="0"
          id="stop3966" />
       <stop
-         style="stop-color:#00c200;stop-opacity:1;"
+         id="stop3971"
          offset="1"
-         id="stop3968" />
+         style="stop-color:#001600;stop-opacity:1;" />
     </linearGradient>
     <radialGradient
        xlink:href="#linearGradient7520"
@@ -1571,10 +1571,10 @@
        inkscape:collect="always"
        xlink:href="#linearGradient3964"
        id="linearGradient3970"
-       x1="5.3219714"
-       y1="6.5288692"
-       x2="40.667606"
-       y2="20.296888"
+       x1="26.48773"
+       y1="17.830975"
+       x2="24.639166"
+       y2="8.5837975"
        gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
@@ -1584,9 +1584,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.8663502"
-     inkscape:cx="18.351766"
-     inkscape:cy="28.346397"
+     inkscape:zoom="23.139188"
+     inkscape:cx="38.05242"
+     inkscape:cy="9.516205"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -1695,17 +1695,6 @@
        width="39.04406"
        x="4.4807887"
        y="1044.7323" />
-    <text
-       xml:space="preserve"
-       style="font-size:25.95381165px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#2e3436;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
-       x="6.1152182"
-       y="1043.7307"
-       id="text4666"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4668"
-         x="6.1152182"
-         y="1043.7307"><!--// DAY STARTS HERE //-->33<!--// DAY ENDS HERE //--></tspan></text>
     <rect
        height="5.7796159"
        id="rect7506"
@@ -1720,9 +1709,20 @@
        inkscape:label="hires"
        style="display:inline"
        transform="translate(-344.98637,882.70598)" />
+    <text
+       xml:space="preserve"
+       style="font-size:25.95381165px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#2e3436;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="6.5262036"
+       y="1044.5527"
+       id="text4666"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4668"
+         x="6.5262036"
+         y="1044.5527"><!--// DAY STARTS HERE //-->33<!--// DAY ENDS HERE //--></tspan></text>
     <g
        id="g4708"
-       transform="translate(-11.488776,7.6690941)">
+       transform="matrix(0.79409817,0,0,0.84474886,-0.14290981,169.11617)">
       <path
          style="opacity:0.20879104;color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.5;marker:none;visibility:visible;display:block;overflow:visible"
          sodipodi:nodetypes="cccc"

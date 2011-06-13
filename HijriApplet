@@ -407,6 +407,7 @@ class CalStatusIcon(gtk.StatusIcon):
     popup_menu.add(i)
 
 bus=None
+st=None
 try:
   import dbus
   import dbus.service
@@ -427,7 +428,7 @@ def init_dbus():
 
     @dbus.service.method("org.freedesktop.HijriApplet", in_signature='', out_signature='')
     def Show(self):
-      win.show_all(); update_gui()
+      st.win.show_all()
 
     @dbus.service.method("org.freedesktop.HijriApplet", in_signature='', out_signature='s')
     def Version(self):
@@ -452,6 +453,7 @@ def init_dbus():
   bus_object = Manager(bus, '/Manager')
 
 def main():
+  global st
   init_dbus()
   st=CalStatusIcon(cal)
   gtk.main()

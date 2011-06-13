@@ -27,15 +27,16 @@ The algorith itself is not here, it's in another file called hijra.py
 
 # TODO: Implement ocations reminder
 # TODO: Implement configuration, ie. allow direction change, and setting first way of week
-# TODO: when to do notify, maybe for reminders ..etc.
 
 import sys, os, os.path, time, re
 import pango, gobject, gtk
 
 import sys
 
-#try: import pynotify
-#except ImportError: pass
+no_notify=False
+
+try: import pynotify
+except ImportError: no_notify=True
 
 from HijriCal import HijriCal
 cal=HijriCal()
@@ -310,6 +311,11 @@ class CalStatusIcon(gtk.StatusIcon):
   def __init__(self, cal):
     gtk.StatusIcon.__init__(self)
     self.cal=cal
+    self.notify=None
+    if not no_notify:
+      pynotify.init('HijriApplet')
+      self.notify=pynotify.Notification("التقويم الهجري")
+
     Y,M,D,W=self.cal.today
     yy,mm,dd=self.cal.g_today
     self.connect ('button-press-event', self.clicked_cb)
@@ -326,14 +332,30 @@ class CalStatusIcon(gtk.StatusIcon):
     self.win=CalWindow(cal)
     self.set_visible(True)
     self.setup_popup_menu()
+    self.update_notify()
     if not '--hidden' in sys.argv: self.win.show_all()
+    else: self.show_notify()
     gobject.timeout_add(5000, self.update)
+
+  def update_notify(self):
+    if not self.notify: return
+    Y,M,D,W=self.cal.today
+    yy,mm,dd=self.cal.g_today
+    self.notify.set_property('icon-name','gtk-dialog-info')
+    self.notify.set_property('summary', "التقويم الهجري" )
+    self.notify.set_property('body', "%s, %d من %s لعام %d\nالموافق %d من %s لعام %s" % (week_days[W], D, months[M-1], Y,dd,gmonths[mm-1],yy) )
+    #self.notify.set_timeout(5)
+  
+  def show_notify(self):
+    if not self.notify: return
+    self.notify.show()
 
   def update(self):
     self.cal.refresh_today()
     Y,M,D,W=self.cal.today
     d_m="%02d/%02d" % (D,M)
     if self.last_d_m == d_m: return True
+    self.update_notify()
     self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W], D, months[M-1], Y))
     self.last_d_m=d_m
     svg_fn=update_icon_file(D,M)
@@ -343,6 +365,7 @@ class CalStatusIcon(gtk.StatusIcon):
       self.win.set_icon_from_file(svg_fn)
       self.win.about.set_icon_from_file(svg_fn)
     self.win.update()
+    self.setup_notify(Y,M,D,W)
     return True
 
   def show_popup_menu(self):
@@ -353,15 +376,15 @@ class CalStatusIcon(gtk.StatusIcon):
 
 
   def clicked_cb(self, w, event):
-    # FIXME: in what case we should show notification
-    # if event.button == 1: notify.show(); return
+    # TODO: use defined buttons
     if event.button == 1:
       if not self.win.g_e.get_property('visible'):
         self.win.show_all()
       else:
         self.win.set_property("visible", not self.win.get_property("visible"))
-    if event.button == 3: self.show_popup_menu()
-
+    elif event.button == 2: self.show_notify()
+    elif event.button == 3: self.show_popup_menu()
+  
   def show_cb(self, *a):
     self.win.show_all()
     self.update()

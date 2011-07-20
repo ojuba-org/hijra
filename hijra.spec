@@ -1,7 +1,7 @@
 Name: hijra
 Summary: Hijri Islamic Calendar utils in python
 URL: http://hijra.ojuba.org
-Version: 0.1.18
+Version: 0.2.0
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.bz2
 License: Waqf
@@ -41,14 +41,21 @@ and a is just a shift.
 Summary: Hijri Tray Applet for GNOME (also works with KDE)
 Group: System Environment/Base
 BuildArch: noarch
-# TODO: is it better to say gnome-python2-extras ?
-Requires: python, setuptool, pygtk2, gnome-python2-libegg, notify-python
+Requires: python, pygtk2, notify-python
 Requires: hijra-python
 Requires(post): desktop-file-utils
 %description applet
 Hijri Tray Applet for GNOME (also works with KDE)
 That uses Hijra Algorithm by Muayyad Saleh Alsadi<alsadi@gmail.com>
 provided by python-hijra package
+
+%package -n gnome-shell-extension-hijra
+Summary: gnome-shell extension to move hijri calendar
+Group: System Environment/Base
+BuildArch: noarch
+Requires: hijra-applet
+%description -n gnome-shell-extension-hijra
+
 
 %prep
 %setup -q
@@ -74,7 +81,15 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/*
 /usr/share/hijra/*
 /etc/xdg/autostart/*
+
+%files -n gnome-shell-extension-hijra
+/usr/share/gnome-shell/extensions/HijriApplet@ojuba.org/*
+
+
 %changelog
+* Wed Jul 20 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.0-1
+- gnome 3 support
+
 * Sat Feb 14 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.18-1
 - use dbus so that only one applet is running
 

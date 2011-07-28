@@ -41,7 +41,7 @@ and a is just a shift.
 Summary: Hijri Tray Applet for GNOME (also works with KDE)
 Group: System Environment/Base
 BuildArch: noarch
-Requires: python, pygtk2, notify-python
+Requires: python, pygtk2, notify-python, desktop-notification-daemon
 Requires: hijra-python
 Requires(post): desktop-file-utils
 %description applet

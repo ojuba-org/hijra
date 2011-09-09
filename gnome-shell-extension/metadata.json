@@ -1,1 +1,7 @@
-{"shell-version": ["3.0.2"], "uuid": "HijriApplet@ojuba.org", "name": "HijriApplet", "description": "HijriApplet"}
+{
+ "uuid": "HijriApplet@ojuba.org",
+ "shell-version": ["3.0.2"],
+ "name": "HijriApplet",
+ "description": "HijriApplet",
+ "url": "http://hijra.ojuba.org"
+}

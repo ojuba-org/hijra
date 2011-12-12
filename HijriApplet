@@ -365,7 +365,8 @@ class CalStatusIcon(gtk.StatusIcon):
       self.win.set_icon_from_file(svg_fn)
       self.win.about.set_icon_from_file(svg_fn)
     self.win.update()
-    self.setup_notify(Y,M,D,W)
+    #self.setup_notify(Y,M,D,W)
+    self.show_notify()
     return True
 
   def show_popup_menu(self):

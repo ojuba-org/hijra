@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+# -*- Mode: Python; py-indent-offset: 4 -*-
 """
 Hijri Tray Applet for GNOME (also works with KDE)
 Copyright (c) 2006-2011 Muayyad Saleh Alsadi<alsadi@gmail.com>
@@ -33,455 +34,559 @@ from gi.repository import GObject, Gtk
 
 import sys
 
-no_notify=False
+no_notify = False
 
-try: from gi.repository import Notify as pynotify
-except ImportError: no_notify=True
+try:
+    from gi.repository import Notify as pynotify
+except ImportError:
+    no_notify=True
 
 from HijriCal import HijriCal
-cal=HijriCal()
+cal = HijriCal()
 
-week_days=[ "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت" ]
-months=[
+week_days = [ "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت" ]
+months = [
   "محرم","صفر","ربيع الأول","ربيع الثاني",
   "جمادى الأولى","جمادى الثانية","رجب","شعبان",
   "رمضان","شوال","ذو القعدة","ذو الحجة"
   ]
-gmonths=[
+gmonths = [
   "كانون ثاني", "شباط", "آذار", "نيسان",
   "أيار", "حزيران","تموز","آب",
   "أيلول", "تشرين أول", "تشرين ثاني", "كانون أول"
   ]
 
 def wday_index(i):
-  ws=cal.get_week_start()
-  if (cal.get_direction()==1): return (i+ws) % 7
-  else: return ((6-i)+ws) % 7
+    ws = cal.get_week_start()
+    if (cal.get_direction() == 1):
+        return (i+ws) % 7
+    else:
+        return ((6-i)+ws) % 7
 
 def wday_from_index(i):
-  ws=cal.get_week_start()
-  if (cal.get_direction()==1): return (7+i-ws) % 7
-  else: return (6+ws-i)%7
+    ws = cal.get_week_start()
+    if (cal.get_direction() == 1):
+        return (7+i-ws) % 7
+    else:
+        return (6+ws-i)%7
 
 def guess_data_dir():
-  d=os.path.dirname(__file__)
-  dd=os.path.join(d, '..', 'share', 'hijra', 'hijra-data')
-  if os.path.isdir(dd): return dd
-  dd=os.path.join(d, 'hijra-data')
-  return dd
+    d = os.path.dirname(__file__)
+    dd = os.path.join(d, '..', 'share', 'hijra', 'hijra-data')
+    if os.path.isdir(dd):
+        return dd
+    dd = os.path.join(d, 'hijra-data')
+    return dd
 
 # Update icon file
 def update_icon_file(day,mth):
-  svg_fn = os.path.join(guess_data_dir(), "cal-template.svg")
-  if not os.path.isfile(svg_fn): return None
-  out_fn = os.path.expanduser('~/.hijra-icon.svg')
-  day_re = re.compile(r"""<!--// DAY STARTS HERE //-->(\d+)<!--// DAY ENDS HERE //-->""", re.M)
-  mth_re = re.compile(r"""<!--// MONTH STARTS HERE //-->(\d+)<!--// MONTH ENDS HERE //-->""", re.M)
-  svg_text = open(svg_fn, 'rt').read()
-  svg_text, n = mth_re.subn("%02d" % mth, svg_text)
-  svg_text, n = day_re.subn("%02d" % day, svg_text)
-  try: open(out_fn, 'wt+').write(svg_text)
-  except: return None
-  return out_fn
+    svg_fn = os.path.join(guess_data_dir(), "cal-template.svg")
+    if not os.path.isfile(svg_fn): return None
+    out_fn = os.path.expanduser('~/.hijra-icon.svg')
+    day_re = re.compile(r"""<!--// DAY STARTS HERE //-->(\d+)<!--// DAY ENDS HERE //-->""", re.M)
+    mth_re = re.compile(r"""<!--// MONTH STARTS HERE //-->(\d+)<!--// MONTH ENDS HERE //-->""", re.M)
+    svg_text = open(svg_fn, 'rt').read()
+    svg_text, n = mth_re.subn("%02d" % mth, svg_text)
+    svg_text, n = day_re.subn("%02d" % day, svg_text)
+    try:
+        open(out_fn, 'wt+').write(svg_text)
+    except:
+        return None
+    return out_fn
 
 
 class CalAbout(Gtk.AboutDialog):
-  def __init__(self, win):
-    Gtk.AboutDialog.__init__(self,parent=win)
-    self.set_default_response(Gtk.ResponseType.CLOSE)
-    self.connect('delete-event', lambda *a: self.hide())
-    self.connect('response', lambda *a: self.hide())
-    try: self.set_program_name("التقويم الهجري")
-    except AttributeError: pass
-    self.set_name("التقويم الهجري")
-    #self.set_version(version)
-    self.set_copyright("Copyright (c) 2006-2008 Muayyad Saleh Alsadi <alsadi@gmail.com>")
-    self.set_comments("Hijri Islamic Calendar")
-    self.set_license("""
-      Released under terms on Waqf Public License.
-      This program is free software; you can redistribute it and/or modify
-      it under the terms of the latest version Waqf Public License as
-      published by Ojuba.org.
+    def __init__(self, win):
+        Gtk.AboutDialog.__init__(self, parent = win)
+        self.set_default_response(Gtk.ResponseType.CLOSE)
+        self.connect('delete-event', lambda *a: self.hide())
+        self.connect('response', lambda *a: self.hide())
+        try:
+            self.set_program_name("التقويم الهجري")
+        except AttributeError:
+            pass
+        self.set_name("التقويم الهجري")
+        #self.set_version(version)
+        self.set_copyright("Copyright (c) 2006-2008 Muayyad Saleh Alsadi <alsadi@gmail.com>")
+        self.set_comments("Hijri Islamic Calendar")
+        self.set_license("""
+            Released under terms on Waqf Public License.
+            This program is free software; you can redistribute it and/or modify
+            it under the terms of the latest version Waqf Public License as
+            published by Ojuba.org.
 
-      This program is distributed in the hope that it will be useful,
-      but WITHOUT ANY WARRANTY; without even the implied warranty of
-      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-      The Latest version of the license can be found on
-      "http://www.ojuba.org/wiki/waqf/license"
+            The Latest version of the license can be found on
+            "http://www.ojuba.org/wiki/waqf/license"
 
-""")
-    self.set_website("http://hijra.ojuba.org/")
-    self.set_website_label("http://hijra.ojuba.org")
-    self.set_authors(["Muayyad Saleh Alsadi <alsadi@ojuba.org>"])
-#  self.set_documenters(documenters)
-#  self.set_artists(artists)
-#  self.set_translator_credits(translator_credits)
-#  self.set_logo(logo)
-#  self.set_logo_icon_name(icon_name)
+            """)
+        self.set_website("http://hijra.ojuba.org/")
+        self.set_website_label("http://hijra.ojuba.org")
+        self.set_authors(["Muayyad Saleh Alsadi <alsadi@ojuba.org>"])
+        #  self.set_documenters(documenters)
+        #  self.set_artists(artists)
+        #  self.set_translator_credits(translator_credits)
+        #  self.set_logo(logo)
+        #  self.set_logo_icon_name(icon_name)
 
 
 class CalButton(Gtk.Button):
-  def __init__(self, title=None, tooltip=None, img=None, ico_name=None, img_fn=None, stock=None):
-    Gtk.Button.__init__(self)
-    if title: self.set_text(title)
-    if stock: img=Gtk.Image(); img.set_from_stock(stock, Gtk.IconSize.SMALL_TOOLBAR)
-    if img_fn: img=Gtk.Image(); img.set_from_file(img_fn)
-    if ico_name: img=Gtk.Image(); img.set_from_icon_name(ico_name)
-    if img: self.set_image(img)
-    if tooltip: self.set_tooltip_text(tooltip)
-    self.set_focus_on_click(False)
+    def __init__(self,
+                 title=None,
+                 tooltip=None,
+                 img=None,
+                 ico_name=None,
+                 img_fn=None,
+                 stock=None):
+        Gtk.Button.__init__(self)
+        if title:
+            self.set_text(title)
+        if stock:
+            img = Gtk.Image()
+            img.set_from_stock(stock, Gtk.IconSize.SMALL_TOOLBAR)
+        if img_fn:
+            img = Gtk.Image()
+            img.set_from_file(img_fn)
+        if ico_name:
+            img = Gtk.Image()
+            img.set_from_icon_name(ico_name)
+        if img:
+            self.set_image(img)
+        if tooltip:
+            self.set_tooltip_text(tooltip)
+        self.set_focus_on_click(False)
 
 
 class CalWindow(Gtk.Window):
-  def __init__(self, cal, st):
-    Gtk.Window.__init__(self)
-    self._first_time_show=False
-    self.cal=cal
-    self.st=st
-    self.about=CalAbout(self)
-    self.set_resizable(False)
-    self.set_title("التقويم الهجري")
-    self.set_position(Gtk.WindowPosition.CENTER)
-    self.accel=Gtk.AccelGroup()
-    self.add_accel_group(self.accel)
-    self.hide_on_delete()
-    #self.set_size_request(200, 300)
-    self.connect('delete-event', lambda w, *a: w.hide() or True)
-    vb=Gtk.VBox(False,0); self.add(vb)
-    hb=Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
-    b=CalButton(tooltip="عام سابق", stock=Gtk.STOCK_GOTO_FIRST)
-    hb.pack_start(b,False, False, 0)
-    b.connect('clicked', self.prev_year_cb)
-    b=CalButton(tooltip="شهر سابق", stock=Gtk.STOCK_GO_BACK)
-    hb.pack_start(b,False, False, 0)
-    b.connect('clicked', self.prev_month_cb)
-    self.t=Gtk.Label("...")
-    self.t.set_justify(Gtk.Justification.CENTER)
-    hb.pack_start(self.t,True, True, 0)
-    b=CalButton(tooltip="شهر تالي", stock=Gtk.STOCK_GO_FORWARD)
-    hb.pack_start(b,False, False, 0)
-    b.connect('clicked', self.next_month_cb)
-    b=CalButton(tooltip="عام تالي", stock=Gtk.STOCK_GOTO_LAST)
-    hb.pack_start(b,False, False, 0)
-    b.connect('clicked', self.next_year_cb)
+    def __init__(self, cal, st):
+        Gtk.Window.__init__(self)
+        self._first_time_show = False
+        self.cal = cal
+        self.st = st
+        self.about = CalAbout(self)
+        self.set_resizable(False)
+        self.set_title("التقويم الهجري")
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.accel = Gtk.AccelGroup()
+        self.add_accel_group(self.accel)
+        self.hide_on_delete()
+        #self.set_size_request(200, 300)
+        self.connect('delete-event', lambda w, *a: w.hide() or True)
+        vb = Gtk.VBox(False,0); self.add(vb)
+        hb = Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
+        b = CalButton(tooltip = "عام سابق", stock = Gtk.STOCK_GOTO_FIRST)
+        hb.pack_start(b,False, False, 0)
+        b.connect('clicked', self.prev_year_cb)
+        b = CalButton(tooltip = "شهر سابق", stock = Gtk.STOCK_GO_BACK)
+        hb.pack_start(b,False, False, 0)
+        b.connect('clicked', self.prev_month_cb)
+        self.t = Gtk.Label("...")
+        self.t.set_justify(Gtk.Justification.CENTER)
+        hb.pack_start(self.t, True, True, 0)
+        b = CalButton(tooltip = "شهر تالي", stock  =Gtk.STOCK_GO_FORWARD)
+        hb.pack_start(b,False, False, 0)
+        b.connect('clicked', self.next_month_cb)
+        b = CalButton(tooltip = "عام تالي", stock = Gtk.STOCK_GOTO_LAST)
+        hb.pack_start(b,False, False, 0)
+        b.connect('clicked', self.next_year_cb)
+
+        hb = Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
+        grid = Gtk.Table(7,6,True)
+        vb.pack_start(grid,True, True, 0)
+        self.fill_grid(grid)
+
+        hb = Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
+        self.g_e = e = Gtk.Entry()
+        e.set_width_chars(6)
+        e.set_tooltip_text("العام الجريجوري")
+        e.connect("activate", self.convert_cb)
+        hb.pack_start(e,False, False, 0)
+        img = Gtk.Image()
+        img.set_from_stock(Gtk.STOCK_CONVERT, Gtk.IconSize.MENU)
+        hb.pack_start(img,False, False, 0)
+        
+        self.h_e = e = Gtk.Entry()
+        e.set_width_chars(6)
+        e.set_tooltip_text("العام الهجري")
+        hb.pack_start(e,False, False, 0)
+        img = Gtk.Image()
+        img.set_from_stock(Gtk.STOCK_JUMP_TO, Gtk.IconSize.MENU)
+        hb.pack_start(img,False, False, 0)
+        
+        e.connect("activate", self.jump_cb)
+        b = CalButton(tooltip = "اليوم", stock = Gtk.STOCK_REFRESH)
+        b.connect("clicked", self.today_cb)
+        hb.pack_start(b, False, False, 0)
+        
+        b = CalButton(tooltip = "حول", stock = Gtk.STOCK_ABOUT)
+        b.connect("clicked", lambda *a: self.st.show_hide_cb(True))
+        hb.pack_start(b, False, False, 0)
+
+
+    def fill_grid(self, grid):
+        days_l = [None for i in range(7)]
+        cell = [[None for i in range(7)] for j in range(7)]
+        for i in range(7):
+            days_l[i] = Gtk.Label('...')
+            e = Gtk.EventBox(); e.add(days_l[i])
+            grid.attach(e, i, i+1, 0, 1,
+                        Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND,
+                        Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND,
+                        0, 0)
+        for n in range(42):
+            i = n%7
+            j = n/7
+            cell[j][i] = Gtk.Label("-")
+            cell[j][i].set_alignment(0.5,0.5)
+            cell[j][i].set_justify(Gtk.Justification.CENTER)
+            cell[j][i].set_tooltip_text('')
+
+            e = Gtk.EventBox()
+            e.add(cell[j][i])
+            grid.attach(e, i, i+1, j+1, j+2,
+                      Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND,
+                      Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND,
+                      0, 0)
+        self.cell = cell
+        self.days_l = days_l
     
-    hb=Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
-    grid = Gtk.Table(7,6,True)
-    vb.pack_start(grid,True, True, 0)
-    self.fill_grid(grid)
-    
-    hb=Gtk.HBox(False,0); vb.pack_start(hb,False, False, 0)
-    self.g_e=e=Gtk.Entry()
-    e.set_width_chars(6)
-    e.set_tooltip_text("العام الجريجوري")
-    e.connect("activate", self.convert_cb)
-    hb.pack_start(e,False, False, 0)
-    img=Gtk.Image(); img.set_from_stock(Gtk.STOCK_CONVERT, Gtk.IconSize.MENU)
-    hb.pack_start(img,False, False, 0)
-    self.h_e=e=Gtk.Entry()
-    e.set_width_chars(6)
-    e.set_tooltip_text("العام الهجري")
-    hb.pack_start(e,False, False, 0)
-    img=Gtk.Image(); img.set_from_stock(Gtk.STOCK_JUMP_TO, Gtk.IconSize.MENU)
-    hb.pack_start(img,False, False, 0)
-    e.connect("activate", self.jump_cb)
-    b=CalButton(tooltip="اليوم", stock=Gtk.STOCK_REFRESH)
-    b.connect("clicked", self.today_cb)
-    hb.pack_start(b, False, False, 0)
-    b=CalButton(tooltip="حول", stock=Gtk.STOCK_ABOUT)
-    b.connect("clicked", lambda *a: self.st.show_hide_cb(True))
-    hb.pack_start(b, False, False, 0)
-    
-    
-  def fill_grid(self, grid):
-    days_l=[None for i in range(7)]
-    cell=[[None for i in range(7)] for j in range(7)]
-    for i in range(7):
-      days_l[i]=Gtk.Label('...')
-      e=Gtk.EventBox(); e.add(days_l[i])
-      grid.attach(e, i, i+1, 0, 1, Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, \
-                  Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, 0, 0)
-    for n in range(42):
-      i=n%7; j=n/7;
-      cell[j][i]=Gtk.Label("-")
-      cell[j][i].set_alignment(0.5,0.5)
-      cell[j][i].set_justify(Gtk.Justification.CENTER)
-      cell[j][i].set_tooltip_text('')
-      e=Gtk.EventBox(); e.add(cell[j][i])
-      grid.attach(e, i,i+1,j+1,j+2,Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, \
-                  Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND,0,0)
-    self.cell=cell
-    self.days_l=days_l
-    
-  def prev_year_cb(self, *a, **kw):
-    self.cal.goto_hijri_day(self.cal.Y-1, self.cal.M, 1);
-    self.update()
+    def prev_year_cb(self, *a, **kw):
+        self.cal.goto_hijri_day(self.cal.Y-1, self.cal.M, 1)
+        self.update()
 
-  def next_year_cb(self, *a, **kw):
-    self.cal.goto_hijri_day(self.cal.Y+1, self.cal.M, 1);
-    self.update()
+    def next_year_cb(self, *a, **kw):
+        self.cal.goto_hijri_day(self.cal.Y+1, self.cal.M, 1)
+        self.update()
 
-  def prev_month_cb(self, *a, **kw):
-    Y,M,D=self.cal.Y, self.cal.M-1, 1
-    if (M<1): M=12; Y-=1
-    self.cal.goto_hijri_day(Y, M, 1)
-    self.update()
+    def prev_month_cb(self, *a, **kw):
+        Y, M, D = self.cal.Y, self.cal.M-1, 1
+        if (M < 1):
+            M = 12
+            Y -= 1
+        self.cal.goto_hijri_day(Y, M, 1)
+        self.update()
 
-  def next_month_cb(self, *a, **kw):
-    Y,M,D=self.cal.Y, self.cal.M+1, 1
-    if (M>12): M=1; Y+=1
-    self.cal.goto_hijri_day(Y, M, 1)
-    self.update()
+    def next_month_cb(self, *a, **kw):
+        Y, M, D = self.cal.Y, self.cal.M+1, 1
+        if (M > 12):
+            M = 1
+            Y += 1
+        self.cal.goto_hijri_day(Y, M, 1)
+        self.update()
 
-  def today_cb(self, *a, **kw):
-    self.cal.goto_today()
-    self.update()
+    def today_cb(self, *a, **kw):
+        self.cal.goto_today()
+        self.update()
 
-  def convert_cb(self, *a, **kw):
-    try: y=int(self.g_e.get_text())
-    except ValueError: return
-    self.cal.goto_gregorian_day(y,1,1)
-    self.h_e.set_text(str(self.cal.Y))
-    self.update()
+    def convert_cb(self, *a, **kw):
+        try:
+            y = int(self.g_e.get_text())
+        except ValueError:
+            return
+        self.cal.goto_gregorian_day(y, 1, 1)
+        self.h_e.set_text(str(self.cal.Y))
+        self.update()
 
-  def jump_cb(self, *a, **kw):
-    try: y=int(self.h_e.get_text())
-    except ValueError: return
-    self.cal.goto_hijri_day(y,1,1)
-    self.update()
+    def jump_cb(self, *a, **kw):
+        try:
+            y = int(self.h_e.get_text())
+        except ValueError:
+            return
+        self.cal.goto_hijri_day(y, 1, 1)
+        self.update()
 
 
-  def get_theme_colors(self):
-    # colors[is_holyday][normal selected inactive]=[fg,bg,fg_s,bg_s]
-    colors=[[[0 for i in 1,2,3,4] for j in 1,2,3] for k in 1,2]
-    m = Gtk.Window.get_style(self)
-    for i,s in enumerate((Gtk.StateType.NORMAL,Gtk.StateType.SELECTED,Gtk.StateType.INSENSITIVE)):
-      fg, bg = m.fg[s], m.bg[s]
-      colors[0][i]=bg,fg,bg.to_string(),fg.to_string()
-      colors[1][i]=fg,bg,fg.to_string(),bg.to_string()
-    self.colors=colors
-    return self.colors
+    def get_theme_colors(self):
+        # colors[is_holyday][normal selected inactive]=[fg,bg,fg_s,bg_s]
+        colors = [[[0 for i in 1,2,3,4] for j in 1,2,3] for k in 1,2]
+        m = Gtk.Window.get_style(self)
+        for i,s in enumerate((Gtk.StateType.NORMAL,
+                              Gtk.StateType.SELECTED,
+                              Gtk.StateType.INSENSITIVE)):
+            fg, bg = m.fg[s], m.bg[s]
+            colors[0][i] = bg, fg, bg.to_string(), fg.to_string()
+            colors[1][i] = fg, bg, fg.to_string(), bg.to_string()
+        self.colors = colors
+        return self.colors
 
-  def update(self):
-    colors=self.get_theme_colors()
-    if (self.cal.Y, self.cal.M)==self.cal.today[0:2]: self.cal.goto_today()
-    self.t.set_text(months[self.cal.M-1]+" "+str(self.cal.Y))
-    self.g_e.set_text(str(self.cal.gy))
-    self.h_e.set_text(str(self.cal.Y))
-    a=self.cal.get_array()
-    b=self.cal.get_g_array()
-    for i in range(7):
-      self.days_l[i].set_text(week_days[wday_index(i)])
-      # colors[is_holyday][normal selected inactive]=[fg,bg,fg_s,bg_s]
-      self.days_l[i].modify_fg(Gtk.StateType.NORMAL,colors[1][1][0])
-      l=self.days_l[i].get_parent()
-      l.modify_fg(Gtk.StateType.NORMAL,colors[1][1][0])
-      l.modify_bg(Gtk.StateType.NORMAL,colors[1][1][1]);
-    holyday_col=wday_from_index((6+self.cal.get_week_start())%7)
-    for j in range(6):
-      c = self.cell[j][holyday_col].get_parent()
-      c.modify_bg(Gtk.StateType.NORMAL,colors[1][1][1])
-    for n in range(42):
-      i=n%7; j=n/7;
-      if (a[j][i]):
-        if a[j][i]==self.cal.D: is_selected=0
-        else: is_selected=1
-        if i==holyday_col: is_holyday=1
-        else: is_holyday=0
-        self.cell[j][i].set_markup('<span size="large" weight="bold" foreground="%s" background="%s">%02d</span>\n<span size="small" weight="bold" foreground="grey">%02d/%02d</span>' % (
-          colors[is_holyday][is_selected][2],colors[is_holyday][is_selected][3],
-          a[j][i], b[j][i][0],b[j][i][1]))
-        h_str="%d من %s لعام %d هـ" % (a[j][i], months[self.cal.M-1], self.cal.Y)
-        g_str="%d من %s لعام %d م" % (b[j][i][0], gmonths[b[j][i][1]-1], b[j][i][2])
-        self.cell[j][i].set_tooltip_text("%s\n%s" % (h_str,g_str))
-      else: self.cell[j][i].set_text('-'); self.cell[j][i].set_tooltip_text('')
+    def update(self):
+        colors = self.get_theme_colors()
+        if (self.cal.Y, self.cal.M) == self.cal.today[0:2]:
+            self.cal.goto_today()
+        self.t.set_text(months[self.cal.M-1]+" "+str(self.cal.Y))
+        self.g_e.set_text(str(self.cal.gy))
+        self.h_e.set_text(str(self.cal.Y))
+        a = self.cal.get_array()
+        b = self.cal.get_g_array()
+        for i in range(7):
+            self.days_l[i].set_text(week_days[wday_index(i)])
+            # colors[is_holyday][normal selected inactive]=[fg,bg,fg_s,bg_s]
+            self.days_l[i].modify_fg(Gtk.StateType.NORMAL, colors[1][1][0])
+            l = self.days_l[i].get_parent()
+            l.modify_fg(Gtk.StateType.NORMAL, colors[1][1][0])
+            l.modify_bg(Gtk.StateType.NORMAL, colors[1][1][1]);
+        holyday_col = wday_from_index((6+self.cal.get_week_start())%7)
+        for j in range(6):
+            c = self.cell[j][holyday_col].get_parent()
+            c.modify_bg(Gtk.StateType.NORMAL, colors[1][1][1])
+        for n in range(42):
+            i = n%7
+            j = n/7
+            if (a[j][i]):
+                if a[j][i] == self.cal.D:
+                    is_selected = 0
+                else:
+                    is_selected = 1
+                if i == holyday_col:
+                    is_holyday = 1
+                else:
+                    is_holyday = 0
+                self.cell[j][i].set_markup('<span size="large" weight="bold" foreground="%s" background="%s">%02d</span>\n<span size="small" weight="bold" foreground="grey">%02d/%02d</span>' % 
+                                             (colors[is_holyday][is_selected][2],
+                                             colors[is_holyday][is_selected][3],
+                                             a[j][i],
+                                             b[j][i][0],b[j][i][1]))
+                h_str = "%d من %s لعام %d هـ" % (a[j][i],
+                                                 months[self.cal.M-1],
+                                                 self.cal.Y)
+                g_str = "%d من %s لعام %d م" % (b[j][i][0],
+                                                gmonths[b[j][i][1]-1],
+                                                b[j][i][2])
+                self.cell[j][i].set_tooltip_text("%s\n%s" % (h_str,g_str))
+            else:
+                self.cell[j][i].set_text('-')
+                self.cell[j][i].set_tooltip_text('')
 
 
-  def first_time_show(self):
-    self._first_time_show=True
-    # FIXME: what is Gtk.TEXT_DIR_RTL in gtk3 ?
-    #if Gtk.Widget.get_default_direction()==Gtk.TEXT_DIR_LTR:
-    if Gtk.Widget.get_default_direction()==1:
-      self.cal.set_direction(-1) # LTR
-    else:
-      self.cal.set_direction(1) # RTL
-    self.update()
+    def first_time_show(self):
+        self._first_time_show = True
+        # FIXME: what is Gtk.TEXT_DIR_RTL in gtk3 ?
+        #if Gtk.Widget.get_default_direction()==Gtk.TEXT_DIR_LTR:
+        if Gtk.Widget.get_default_direction() == 1:
+            self.cal.set_direction(-1) # LTR
+        else:
+            self.cal.set_direction(1) # RTL
+        self.update()
 
-  def show(self):
-    r=super(Gtk.Window, self).show()
-    if not self._first_time_show: self.first_time_show()
-    return r
+    def show(self):
+        r = super(Gtk.Window, self).show()
+        if not self._first_time_show:
+            self.first_time_show()
+        return r
 
-  def show_all(self):
-    r=super(Gtk.Window, self).show_all()
-    if not self._first_time_show: self.first_time_show()
-    return r
+    def show_all(self):
+        r = super(Gtk.Window, self).show_all()
+        if not self._first_time_show:
+            self.first_time_show()
+        return r
 
 
 class CalStatusIcon(Gtk.StatusIcon):
-  def __init__(self, cal):
-    Gtk.StatusIcon.__init__(self)
-    self.cal=cal
-    self.notify=None
-    if not no_notify:
-      pynotify.init("التقويم الهجري")
-      self.notify=pynotify.Notification()
+    def __init__(self, cal):
+        Gtk.StatusIcon.__init__(self)
+        self.cal = cal
+        self.notify = None
+        if not no_notify:
+            pynotify.init("التقويم الهجري")
+            self.notify = pynotify.Notification()
 
-    Y,M,D,W=self.cal.today
-    yy,mm,dd=self.cal.g_today
-    self.connect ('button-press-event', self.clicked_cb)
-    self.set_title("التقويم الهجري")
-    self.last_d_m="%02d/%02d" % (D,M)
-    self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W], D, months[M-1], Y))
-    svg_fn=update_icon_file(D,M)
-    if svg_fn:
-      self.set_from_file(svg_fn)
-      Gtk.Window.set_default_icon_from_file(svg_fn)
-    else:
-      self.set_from_icon_name("stock_calendar")
-      Gtk.window_set_default_icon_name('stock_calendar')
-    self.win=CalWindow(cal, self)
-    self.set_visible(True)
-    self.setup_popup_menu()
-    self.update_notify()
-    if not '--hidden' in sys.argv: self.win.show_all()
-    else: self.show_notify()
-    GObject.timeout_add(5000, self.update)
+        Y, M, D, W = self.cal.today
+        yy, mm, dd = self.cal.g_today
+        self.connect ('button-press-event', self.clicked_cb)
+        self.set_title("التقويم الهجري")
+        self.last_d_m = "%02d/%02d" % (D, M)
+        self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W], D, months[M-1], Y))
+        svg_fn = update_icon_file(D, M)
+        if svg_fn:
+            self.set_from_file(svg_fn)
+            Gtk.Window.set_default_icon_from_file(svg_fn)
+        else:
+            self.set_from_icon_name("stock_calendar")
+            Gtk.window_set_default_icon_name('stock_calendar')
+        self.win = CalWindow(cal, self)
+        self.set_visible(True)
+        self.setup_popup_menu()
+        self.update_notify()
+        if not '--hidden' in sys.argv:
+            self.win.show_all()
+        else:
+            self.show_notify()
+        GObject.timeout_add(5000, self.update)
 
-  def update_notify(self):
-    if not self.notify: return
-    Y,M,D,W=self.cal.today
-    yy,mm,dd=self.cal.g_today
-    self.notify.set_property('icon-name','gtk-dialog-info')
-    self.notify.set_property('summary', "التقويم الهجري" )
-    self.notify.set_property('body', "%s, %d من %s لعام %d\nالموافق %d من %s لعام %s" % (week_days[W], D, months[M-1], Y,dd,gmonths[mm-1],yy) )
-    #self.notify.set_timeout(5)
+    def update_notify(self):
+        if not self.notify:
+            return
+        Y, M, D, W = self.cal.today
+        yy, mm, dd = self.cal.g_today
+        self.notify.set_property('icon-name','gtk-dialog-info')
+        self.notify.set_property('summary', "التقويم الهجري" )
+        self.notify.set_property('body',
+                                  "%s, %d من %s لعام %d\nالموافق %d من %s لعام %s"
+                                  % (week_days[W],
+                                     D,
+                                     months[M-1],
+                                     Y,
+                                     dd,
+                                     gmonths[mm-1],
+                                     yy))
+        #self.notify.set_timeout(5)
   
-  def show_notify(self):
-    if not self.notify: return
-    self.notify.show()
+    def show_notify(self):
+        if not self.notify:
+            return
+        self.notify.show()
 
-  def update(self):
-    self.cal.refresh_today()
-    Y,M,D,W=self.cal.today
-    d_m="%02d/%02d" % (D,M)
-    if self.last_d_m == d_m: return True
-    self.update_notify()
-    self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W], D, months[M-1], Y))
-    self.last_d_m=d_m
-    svg_fn=update_icon_file(D,M)
-    if svg_fn:
-      self.set_from_file(svg_fn)
-      Gtk.Window.set_default_icon_from_file(svg_fn)
-      self.win.set_icon_from_file(svg_fn)
-      self.win.about.set_icon_from_file(svg_fn)
-    self.win.update()
-    #self.setup_notify(Y,M,D,W)
-    self.show_notify()
-    return True
+    def update(self):
+        self.cal.refresh_today()
+        Y,M,D,W = self.cal.today
+        d_m = "%02d/%02d" % (D, M)
+        if self.last_d_m == d_m:
+            return True
+        self.update_notify()
+        self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W],
+                                                        D,
+                                                        months[M-1],
+                                                        Y))
+        self.last_d_m = d_m
+        svg_fn = update_icon_file(D,M)
+        if svg_fn:
+            self.set_from_file(svg_fn)
+            Gtk.Window.set_default_icon_from_file(svg_fn)
+            self.win.set_icon_from_file(svg_fn)
+            self.win.about.set_icon_from_file(svg_fn)
+        self.win.update()
+        #self.setup_notify(Y,M,D,W)
+        self.show_notify()
+        return True
 
-  def show_popup_menu(self):
-    self.popup_menu.show_all()
-    if self.win.get_visible(): self.popup_menu.get_children()[0].hide()
-    else: self.popup_menu.get_children()[1].hide()
-    self.popup_menu.popup(None, None, self.position_menu,self,3, Gtk.get_current_event_time())
+    def show_popup_menu(self):
+        self.popup_menu.show_all()
+        if self.win.get_visible():
+            self.popup_menu.get_children()[0].hide()
+        else:
+            self.popup_menu.get_children()[1].hide()
+        self.popup_menu.popup(None,
+                              None,
+                              self.position_menu,
+                              self,
+                              3,
+                              Gtk.get_current_event_time())
 
-
-  def clicked_cb(self, w, event):
-    if event.button == 1: self.show_hide_cb()
-    elif event.button == 2: self.show_notify()
-    elif event.button == 3: self.show_popup_menu()
+    def clicked_cb(self, w, event):
+        if event.button == 1:
+            self.show_hide_cb()
+        elif event.button == 2:
+            self.show_notify()
+        elif event.button == 3:
+            self.show_popup_menu()
   
-  def show_hide_cb(self, about=False, *a):
-    if about or not self.win.g_e.get_property('visible'):
-      self.show_cb()
-    else:
-      self.win.set_property("visible", not self.win.get_property("visible"))
-    if about:
-      self.win.about.run()
+    def show_hide_cb(self, about = False, *a):
+        if about or not self.win.g_e.get_property('visible'):
+            self.show_cb()
+        else:
+            self.win.set_property("visible", not self.win.get_property("visible"))
+        if about:
+            self.win.about.run()
       
-  def show_cb(self, *a):
-    self.win.show_all()
-    self.update()
+    def show_cb(self, *a):
+        self.win.show_all()
+        self.update()
 
-  def setup_popup_menu(self):
-    self.popup_menu=popup_menu=Gtk.Menu()
-    #i = Gtk.ImageMenuItem("إظهار")
-    #img=Gtk.Image()
-    #img.set_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
-    #i.set_image(img)
-    i=Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_OPEN, None)
-    i.connect('activate', self.show_cb)
-    i.set_always_show_image(True)
-    popup_menu.add(i)
-    i=Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_CLOSE, None)
-    i.connect('activate', self.win_hide_cb )
-    i.set_always_show_image(True)
-    popup_menu.add(i)
-    i=Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_ABOUT, None)
-    i.connect('activate', lambda *a: self.show_hide_cb(True))
-    i.set_always_show_image(True)
-    popup_menu.add(i)
-    i=Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_QUIT, None)
-    i.connect('activate', Gtk.main_quit)
-    i.set_always_show_image(True)
-    popup_menu.add(i)
+    def setup_popup_menu(self):
+        self.popup_menu=popup_menu=Gtk.Menu()
+        #i = Gtk.ImageMenuItem("إظهار")
+        #img=Gtk.Image()
+        #img.set_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+        #i.set_image(img)
+        i = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_OPEN, None)
+        i.connect('activate', self.show_cb)
+        i.set_always_show_image(True)
+        popup_menu.add(i)
+        
+        i = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_CLOSE, None)
+        i.connect('activate', self.win_hide_cb )
+        i.set_always_show_image(True)
+        popup_menu.add(i)
+        
+        i = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_ABOUT, None)
+        i.connect('activate', lambda *a: self.show_hide_cb(True))
+        i.set_always_show_image(True)
+        popup_menu.add(i)
+        
+        i = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_QUIT, None)
+        i.connect('activate', Gtk.main_quit)
+        i.set_always_show_image(True)
+        popup_menu.add(i)
   
-  def win_hide_cb(self, *w):
-    self.win.hide()
-    self.win.about.hide()
+    def win_hide_cb(self, *w):
+        self.win.hide()
+        self.win.about.hide()
     
-bus=None
-st=None
+bus = None
+st = None
 try:
-  import dbus
-  import dbus.service
-  #import gobject # for GObject.MainLoop() if no gtk is to be used
-  from dbus.mainloop.glib import DBusGMainLoop
+    import dbus
+    import dbus.service
+    #import gobject # for GObject.MainLoop() if no gtk is to be used
+    from dbus.mainloop.glib import DBusGMainLoop
 
-  dbus_loop = DBusGMainLoop(set_as_default=True)
-  bus = dbus.SessionBus()
-except ImportError: pass
+    dbus_loop = DBusGMainLoop(set_as_default=True)
+    bus = dbus.SessionBus()
+except ImportError:
+    pass
 
 # use dbus so that, only one Applet is shown
 def init_dbus():
-  global bus_name, bus_object,win
-  if not bus: return
-  class Manager(dbus.service.Object):
-    def __init__(self, bus, path):
-          dbus.service.Object.__init__(self,bus,path)
+    global bus_name, bus_object,win
+    if not bus: return
+    
+    class Manager(dbus.service.Object):
+        def __init__(self, bus, path):
+            dbus.service.Object.__init__(self,bus,path)
 
-    @dbus.service.method("org.freedesktop.HijriApplet", in_signature='', out_signature='')
-    def Show(self):
-      st.win.show_all()
+        @dbus.service.method("org.freedesktop.HijriApplet",
+                              in_signature = '',
+                              out_signature = '')
+        def Show(self):
+            st.win.show_all()
 
-    @dbus.service.method("org.freedesktop.HijriApplet", in_signature='', out_signature='s')
-    def Version(self):
-      return "0.1"
-  # values from /usr/include/dbus-1.0/dbus/dbus-shared.h
-  r=bus.request_name('org.freedesktop.HijriApplet', flags=0x4)
-  if r!=1:
-    print "Another process own HijriApplet Service, ask it to show up: "
-    trials=0; appletbus=False
-    while(appletbus==False and trials<20):
-      print ".",
-      try:
-        appletbus=bus.get_object("org.freedesktop.HijriApplet","/Manager"); break
-      except:
-        appletbus=False
-      time.sleep(1); trials+=1
-    print "*"
-    if appletbus: appletbus.Show(dbus_interface='org.freedesktop.HijriApplet')
-    else: print "unable to connect"
-    exit(0)
-  bus_name = dbus.service.BusName("org.freedesktop.HijriApplet", bus)
-  bus_object = Manager(bus, '/Manager')
+        @dbus.service.method("org.freedesktop.HijriApplet",
+                              in_signature = '',
+                              out_signature = 's')
+        def Version(self):
+            return "0.1"
+    # values from /usr/include/dbus-1.0/dbus/dbus-shared.h
+    r = bus.request_name('org.freedesktop.HijriApplet', flags = 0x4)
+    if r != 1:
+        print "Another process own HijriApplet Service, ask it to show up: "
+        trials = 0
+        appletbus = False
+        while(appletbus == False and trials < 20):
+            print ".",
+            try:
+                appletbus = bus.get_object("org.freedesktop.HijriApplet","/Manager")
+                break
+            except:
+                appletbus = False
+            time.sleep(1)
+            trials += 1
+        print "*"
+        if appletbus:
+            appletbus.Show(dbus_interface = 'org.freedesktop.HijriApplet')
+        else:
+            print "unable to connect"
+        exit(0)
+    bus_name = dbus.service.BusName("org.freedesktop.HijriApplet", bus)
+    bus_object = Manager(bus, '/Manager')
 
 def main():
-  global st
-  init_dbus()
-  st=CalStatusIcon(cal)
-  Gtk.main()
+    global st
+    init_dbus()
+    st=CalStatusIcon(cal)
+    Gtk.main()
 
-main()
+if __name__ == '__main__':
+    main()

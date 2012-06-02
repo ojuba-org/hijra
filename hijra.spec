@@ -1,13 +1,15 @@
 Name: hijra
 Summary: Hijri Islamic Calendar utils in python
 URL: http://hijra.ojuba.org
-Version: 0.2.1
+Version: 0.2.2
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.bz2
 License: Waqf
 Group: System Environment/Base
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires:   python
+Requires:   pygobject3 >= 3.0.2
 BuildRequires: gettext
 BuildRequires: python, python-setuptools
 
@@ -87,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 2 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.2-1
+- port to gtk3, webkit3
+
 * Fri Jan 13 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.1-1
 - update for gnome 3.2 support
 

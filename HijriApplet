@@ -437,7 +437,10 @@ class CalStatusIcon(Gtk.StatusIcon):
     def show_notify(self):
         if not self.notify:
             return
-        self.notify.show()
+        try:
+            self.notify.show()
+        except:
+            pass
 
     def update(self):
         self.cal.refresh_today()

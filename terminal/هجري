@@ -1,0 +1,213 @@
+#! /bin/bash
+# Hijri Terminal 3.1
+# Under Waqf License 
+# By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
+# Almasa Project
+# 1434-4-9
+#---------------------------------------------------------------
+#---------------------------------------------------------------
+#---------------------------------------------------------------
+ver=$(hijri-terminal -v)
+arg="$@"
+arg1="$1"
+arg2="$2"
+arg3="$3"
+arg4="$4"
+arg5="$5"
+about="$(hijri-terminal -a arabic)"
+nday=$(date +%u)
+day=$(hijri-terminal -d)
+month=$(hijri-terminal -m)
+year=$(hijri-terminal -y)
+if [ "$arg1" = "معين" ]
+	then
+		nday=$arg5
+		day=$arg4
+		month=$arg3
+		year=$arg2
+		if [ "$day" = "" ] ; then echo "البيانات ناقصة" ; exit ; fi
+		if [ "$month" = "" ] ; then echo "البيانات ناقصة" ; exit ; fi
+		if [ "$year" = "" ] ; then echo "البيانات ناقصة" ; exit ; fi
+		con="`echo "$arg" | grep رسومي`"
+		if [ ! "$con" = "" ] ; then arg1="رسومي" ; fi
+fi
+n="${#year}"
+men="من شهر"
+sana="سنة"
+help="مساعدة ::
+
+لإظهار التاريخ الهجري لهذا اليوم شغل البرنامج بدون أي كلمة بعد الأمر هجري .
+لإظهار التاريخ بشكل رسومي أدخل كلمة رسومي مباشرة بعد الأمر هجري .
+
+لتحويل التاريخ الهجري من النمط الرقمي إلى النمط المكتوب استعمل الصيغة التالية :
+هجري معين <سنة> <شهر> <يوم>
+وإضافة كلمة رسومي في الآخر في حال الرغبة بتفعيل الشكل الرسومي
+مثال ::
+هجري معين 1434 7 22
+النتيجة :
+الثاني و العشرين من شهر رجب سنة أربع وثلاثين وأربعمئة وألف
+
+لإظهار معلومات عن البرنامج أدخل كلمة حول بعد الأمر هجري .
+لإظهار هذه المساعدة اكتب مساعدة بعد الأمر هجري ."
+if [ "$nday" = "1" ] ; then tnday="الإثنين" ; fi
+if [ "$nday" = "2" ] ; then tnday="الثلاثاء" ; fi
+if [ "$nday" = "3" ] ; then tnday="الأربعاء" ; fi
+if [ "$nday" = "4" ] ; then tnday="الخميس" ; fi
+if [ "$nday" = "5" ] ; then tnday="الجمعة" ; fi
+if [ "$nday" = "6" ] ; then tnday="السبت" ; fi
+if [ "$nday" = "7" ] ; then tnday="الأحد" ; fi
+if [ "$day" = "1" ] ; then tday="الأول" ; fi
+if [ "$day" = "2" ] ; then tday="الثاني" ; fi
+if [ "$day" = "3" ] ; then tday="الثالث" ; fi
+if [ "$day" = "4" ] ; then tday="الرابع" ; fi
+if [ "$day" = "5" ] ; then tday="الخامس" ; fi
+if [ "$day" = "6" ] ; then tday="السادس" ; fi
+if [ "$day" = "7" ] ; then tday="السابع" ; fi
+if [ "$day" = "8" ] ; then tday="الثامن" ; fi
+if [ "$day" = "9" ] ; then tday="التاسع" ; fi
+if [ "$day" = "10" ] ; then tday="العاشر" ; fi
+if [ "$day" = "11" ] ; then tday="الحادي عشر" ; fi
+if [ "$day" = "12" ] ; then tday="الثاني عشر" ; fi
+if [ "$day" = "13" ] ; then tday="الثالث عشر" ; fi
+if [ "$day" = "14" ] ; then tday="الرابع عشر" ; fi
+if [ "$day" = "15" ] ; then tday="الخامس عشر" ; fi
+if [ "$day" = "16" ] ; then tday="السادس عشر" ; fi
+if [ "$day" = "17" ] ; then tday="السابع عشر" ; fi
+if [ "$day" = "18" ] ; then tday="الثامن عشر" ; fi
+if [ "$day" = "19" ] ; then tday="التاسع عشر" ; fi
+if [ "$day" = "20" ] ; then tday="العشرين" ; fi
+if [ "$day" = "21" ] ; then tday="الحادي و العشرين" ; fi
+if [ "$day" = "22" ] ; then tday="الثاني و العشرين" ; fi
+if [ "$day" = "23" ] ; then tday="الثالث و العشرين" ; fi
+if [ "$day" = "24" ] ; then tday="الرابع و العشرين" ; fi
+if [ "$day" = "25" ] ; then tday="الخامس و العشرين" ; fi
+if [ "$day" = "26" ] ; then tday="السادس و العشرين" ; fi
+if [ "$day" = "27" ] ; then tday="السابع و العشرين" ; fi
+if [ "$day" = "28" ] ; then tday="الثامن و العشرين" ; fi
+if [ "$day" = "29" ] ; then tday="التاسع و العشرين" ; fi
+if [ "$day" = "30" ] ; then tday="الثلاثين" ; fi
+if [ "$month" = "1" ] ; then tmonth="محرم" ; fi
+if [ "$month" = "2" ] ; then tmonth="صفر" ; fi
+if [ "$month" = "3" ] ; then tmonth="ربيع الأول" ; fi
+if [ "$month" = "4" ] ; then tmonth="ربيع الثاني" ; fi
+if [ "$month" = "5" ] ; then tmonth="جمادى الأولى" ; fi
+if [ "$month" = "6" ] ; then tmonth="جمادى الثانية" ; fi
+if [ "$month" = "7" ] ; then tmonth="رجب" ; fi
+if [ "$month" = "8" ] ; then tmonth="شعبان" ; fi
+if [ "$month" = "9" ] ; then tmonth="رمضان" ; fi
+if [ "$month" = "10" ] ; then tmonth="شوال" ; fi
+if [ "$month" = "11" ] ; then tmonth="ذي القعدة" ; fi
+if [ "$month" = "12" ] ; then tmonth="ذي الحجة" ; fi
+if [ "$n" = "1" ] ; then
+firsty="$year" ; fi
+if [ "$n" = "2" ] ; then
+firsty="`echo $year | cut -c 2`"
+secondy="`echo $year | cut -c 1`"; fi
+if [ "$n" = "3" ] ; then
+firsty="`echo $year | cut -c 3`"
+secondy="`echo $year | cut -c 2`"
+thirdy="`echo $year | cut -c 1`"; fi
+if [ "$n" = "4" ] ; then
+firsty="`echo $year | cut -c 4`"
+secondy="`echo $year | cut -c 3`"
+thirdy="`echo $year | cut -c 2`"
+forthy="`echo $year | cut -c 1`"; fi
+if [ "$n" -gt "4" ] ; then
+echo "عذراً يدعم هذا البرنامج السنوات الهجرية حتى 9999 ويمكن التعديل عليه كونه مفتوح المصدر ، فلا تبخل بتطويره إن رأيت الحاجة لذلك"
+exit ; fi
+bel()
+{
+if [ "$firsty" = "0" ] ; then tfirsty="عشر" ; fi
+if [ "$firsty" = "1" ] ; then tfirsty="أحد عشر" ; fi
+if [ "$firsty" = "2" ] ; then tfirsty="إثني عشر" ; fi
+if [ "$firsty" = "3" ] ; then tfirsty="ثلاث عشر" ; fi
+if [ "$firsty" = "4" ] ; then tfirsty="أربع عشر" ; fi
+if [ "$firsty" = "5" ] ; then tfirsty="خمس عشر" ; fi
+if [ "$firsty" = "6" ] ; then tfirsty="ست عشر" ; fi
+if [ "$firsty" = "7" ] ; then tfirsty="سبع عشر" ; fi
+if [ "$firsty" = "8" ] ; then tfirsty="ثمان عشر" ; fi
+if [ "$firsty" = "9" ] ; then tfirsty="تسع عشر" ; fi
+}
+akthar()
+{
+if [ "$firsty" = "0" ] ; then tfirsty="" ; fi
+if [ "$firsty" = "1" ] ; then tfirsty="واحد" ; fi
+if [ "$firsty" = "2" ] ; then tfirsty="اثنين" ; fi
+if [ "$firsty" = "3" ] ; then tfirsty="ثلاث" ; fi
+if [ "$firsty" = "4" ] ; then tfirsty="أربع" ; fi
+if [ "$firsty" = "5" ] ; then tfirsty="خمس" ; fi
+if [ "$firsty" = "6" ] ; then tfirsty="ست" ; fi
+if [ "$firsty" = "7" ] ; then tfirsty="سبع" ; fi
+if [ "$firsty" = "8" ] ; then tfirsty="ثمان" ; fi
+if [ "$firsty" = "9" ] ; then tfirsty="تسع" ; fi
+}
+if [ "$secondy" = "0" ] ; then tsecondy="" ; fi
+if [ "$secondy" = "1" ] ; then bel ; else akthar ; fi
+if [ "$secondy" = "2" ] ; then tsecondy="وعشرين" ; fi
+if [ "$secondy" = "3" ] ; then tsecondy="وثلاثين" ; fi
+if [ "$secondy" = "4" ] ; then tsecondy="وأربعين" ; fi
+if [ "$secondy" = "5" ] ; then tsecondy="وخمسين" ; fi
+if [ "$secondy" = "6" ] ; then tsecondy="وستين" ; fi
+if [ "$secondy" = "7" ] ; then tsecondy="وسبعين" ; fi
+if [ "$secondy" = "8" ] ; then tsecondy="وثمانين" ; fi
+if [ "$secondy" = "9" ] ; then tsecondy="وتسعين" ; fi
+if [ "$thirdy" = "0" ] ; then thirdy="" ; fi
+if [ "$thirdy" = "1" ] ; then thirdy="ومئة" ; fi
+if [ "$thirdy" = "2" ] ; then thirdy="ومئتين" ; fi
+if [ "$thirdy" = "3" ] ; then thirdy="وثلاثمئة" ; fi
+if [ "$thirdy" = "4" ] ; then thirdy="وأربعمئة" ; fi
+if [ "$thirdy" = "5" ] ; then thirdy="وخمسمئة" ; fi
+if [ "$thirdy" = "6" ] ; then thirdy="وستمئة" ; fi
+if [ "$thirdy" = "7" ] ; then thirdy="وسبعمئة" ; fi
+if [ "$thirdy" = "8" ] ; then thirdy="وثمانمئة" ; fi
+if [ "$thirdy" = "9" ] ; then thirdy="وتسعمئة" ; fi
+if [ "$forthy" = "0" ] ; then forthy="" ; fi
+if [ "$forthy" = "1" ] ; then forthy="وألف" ; fi
+if [ "$forthy" = "2" ] ; then forthy="وألفين" ; fi
+if [ "$forthy" = "3" ] ; then forthy="وثلاث آلاف" ; fi
+if [ "$forthy" = "4" ] ; then forthy="وأربع آلاف" ; fi
+if [ "$forthy" = "5" ] ; then forthy="وخمس آلاف" ; fi
+if [ "$forthy" = "6" ] ; then forthy="وست آلاف" ; fi
+if [ "$forthy" = "7" ] ; then forthy="وسبع آلاف" ; fi
+if [ "$forthy" = "8" ] ; then forthy="وثمان آلاف" ; fi
+if [ "$forthy" = "9" ] ; then forthy="وتسع آلاف" ; fi
+hijridate="`echo $tnday $tday $men $tmonth $sana $tfirsty $tsecondy $thirdy $forthy | sed "s:  : :g" | sed "s:  : :g"`"
+h_gnome()
+{
+zenity --title="هجري $ver" --info --text="$hijridate"
+}
+h_kde()
+{
+kdialog --title="هجري $ver" --msgbox "$hijridate"
+}
+h_gui()
+{
+if test -x "`which zenity 2>/dev/null`"
+    then
+        h_gnome
+elif test -x "`which kdialog 2>/dev/null`"
+    then
+        h_kde
+else echo "لا تتوفر واجهة رسومية مدعومة مثبتة"
+fi
+}
+if [ "$arg1" = "رسومي" ]
+	then h_gui
+elif [ "$arg1" = "حول" ]
+	then echo "$about" ; exit
+elif [ "$arg1" = "مساعدة" ]
+	then echo "$help" ; exit
+elif [ "$arg1" = "--help" ]
+	then echo "$help" ; exit
+elif [ "$arg1" = "مختصر" ]
+	then echo "$day $tmonth $year" ; exit
+	else echo "$hijridate"
+fi
+#---------------------------------------------------------------
+#----Allah-all-thanked-to-help-me-to-write-this-program---------
+#----and-I-ask-him-to-make-the-benefit-for-you------------------
+#----allah-can-do-that------------------------------------------
+#---------------------------------------------------------------
+#----With-our-best-wishes---------------------------------------
+#----almasa-project---------------------------------------------
+#---------------------------------------------------------------

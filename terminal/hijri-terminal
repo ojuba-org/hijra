@@ -1,0 +1,286 @@
+#! /bin/bash
+# Hijri Terminal 3.1
+# Under Waqf License 
+# By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
+# Almasa Project
+# 1434-4-9
+#---------------------------------------------------------------
+#---------------------------------------------------------------
+#----Main-vars--------------------------------------------------
+#---------------------------------------------------------------
+hi_dir="/usr/share/HijriTerminal"
+hi_arg="$@"
+hi_arg1="$1"
+hi_ver="3.1"
+hi_end1="Y,M,D,W=cal.today"
+hi_end2="print Y,M,D"
+hi_header='#! /usr/bin/env python
+"""
+Hijri Terminal 3.1
+
+Under Waqf License 
+By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
+Almasa project
+1434-4-9
+"""
+import sys
+from HijriCal import HijriCal
+cal=HijriCal()
+'
+hi_help="~~ Hijri Terminal 3.1 ~~
+Print Hijri date on terminal .
+
+Usage :
+hijri-terminal [options] [args] 
+
+Options :
+No options shows date of this day.
+-y   to show year only.
+-m   to show month only.
+-d   to show day only.
+-g | gregorian to show Hijri date of custom gregorian date.
+-v | --version to show version of program.
+-a | --about to show (about) messege.
+-h | --help to show this messege. 
+Args :
+arabic to show hijri date in Arabic words.
+gui use with arabic arg to display it with GUI.
+gd=<Number> Enter value of custom gregorian day.
+gm=<Number> Enter value of custom gregorian month.
+gy=<Number> Enter value of custom gregorian year.
+gdate=<Date> Enter custom date of these formats : 
+yyyy-mm-dd yyyy*mm*dd yyyy/mm/dd yyyy,mm,dd
+and you can enter less numbers like yyy-m-d .
+Examples : hijri-terminal
+hijri-terminal -y
+hijri-terminal -g gdate=2005-8-9
+hijri-terminal gregorian gd=9 gm=7 gy=958"
+hi_about="~~ Hijri Terminal 3.1 ~~
+
+Under Waqf License 
+By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
+Almasa project
+1434-4-9
+
+Hijri Terminal 3.1 also contain this two parts :
+
+*** Hijri Islamic Calendar converting functions,
+Copyright (c) 2006-2008 Muayyad Saleh Alsadi<alsadi@gmail.com>
+Under Waqf License 
+
+*** Hijri Islamic High level Calendar API,
+Copyright (c) 2006-2008 Muayyad Saleh Alsadi<alsadi@gmail.com>
+Under Waqf License 
+"
+hi_aboutar="~~ هجري الطرفية 3.1 ~~
+
+منشور تحت بنود رخصة وقف
+بواسطة مصعب حسني الزعبي (moceap@hotmail.com - facebook.com/moceap)
+مشروع ألماسه
+الأربعاء التاسع من شهر ربيع الثاني سنة أربع وثلاثين وأربعمئة وألف
+
+هجري الطرفية 3.1 يحتوي أيضاً على الجزئيتين :
+
+1 - دالات التحويل في التقويم الهجري الإسلامي
+منشورة برخصة وقف 2006 - 2008 بواسطة :
+مؤيد صالح السعدي (alsadi@gmail.com)
+
+2 - بيئة التقويم الهجري الإسلامي عالية المستوى
+منشورة برخصة وقف 2006 - 2008 بواسطة :
+مؤيد صالح السعدي (alsadi@gmail.com)
+"
+#---------------------------------------------------------------
+#----Main-dirs--------------------------------------------------
+#---------------------------------------------------------------
+if ( ! [ -e "$HOME/.Hijri Terminal" ] )
+	then
+		mkdir "$HOME/.Hijri Terminal"
+fi
+if ( ! [ -e "$HOME/.Hijri Terminal/hijri.py" ] )
+	then
+		cp "$hi_dir/hijri.py" "$HOME/.Hijri Terminal/hijri.py"
+fi
+if ( ! [ -e "$HOME/.Hijri Terminal/HijriCal.py" ] )
+	then
+		cp "$hi_dir/HijriCal.py" "$HOME/.Hijri Terminal/HijriCal.py"
+fi
+#---------------------------------------------------------------
+#----Args-------------------------------------------------------
+#---------------------------------------------------------------
+case "$hi_arg" in
+*arabic*) arabic="true"
+esac
+case "$hi_arg1" in
+-v|--version) echo "$hi_ver" ; exit ;;
+-a|--about) if [ "$arabic" = "true" ] ; then echo "$hi_aboutar" ; else echo "$hi_about" ; fi ; exit ;;
+-h|--help) echo "$hi_help" ; exit
+esac
+case "$hi_arg1" in
+*-*y*) hi_Y="Y," ; sep="true"
+esac
+case "$hi_arg1" in
+*-*m*) hi_M="M," ; sep="true"
+esac
+case "$hi_arg1" in
+*-*d*) hi_D="D," ; sep="true"
+esac
+case "$hi_arg1" in
+*-*w*) hi_W="W," ; sep="true"
+esac
+case "$hi_arg1" in
+*gregorian* | *-*g*) gregorian="true"
+esac
+case "$hi_arg" in
+*gui*) gui="رسومي"
+esac
+if [ "$sep" = "true" ]
+	then hi_end2="print $hi_Y$hi_M$hi_D$hi_W"
+fi
+#---------------------------------------------------------------
+#----Gregorian-to-Hijri-Converting------------------------------
+#---------------------------------------------------------------
+if [ "$gregorian" = "true" ]
+	then
+		touch "$HOME/.Hijri Terminal/args"
+		echo " " >> "$HOME/.Hijri Terminal/args"
+		for arg in $hi_arg
+			do
+				echo $arg >> "$HOME/.Hijri Terminal/args"
+			done
+		cat "$HOME/.Hijri Terminal/args" | while read Arg
+			do 
+				temp1=`echo $Arg | grep gdate= | sed "s:gdate=::g"`
+				if [ ! "$temp1" = "" ]
+					then echo "$temp1" > "$HOME/.Hijri Terminal/gdate"
+				fi
+				temp2=`echo $Arg | grep gy= | sed "s:gy=::g"`
+				if [ ! "$temp2" = "" ]
+					then
+						echo "$temp2" > "$HOME/.Hijri Terminal/gy"
+				fi
+				temp3=`echo $Arg | grep gm= | sed "s:gm=::g"`
+				if [ ! "$temp3" = "" ]
+					then
+						echo "$temp3" > "$HOME/.Hijri Terminal/gm"
+				fi
+				temp4=`echo $Arg | grep gd= | sed "s:gd=::g"`
+				if [ ! "$temp4" = "" ]
+					then
+						echo "$temp4" > "$HOME/.Hijri Terminal/gd"
+				fi
+			done
+		if [ -e "$HOME/.Hijri Terminal/gdate" ]
+			then gdate=$(cat "$HOME/.Hijri Terminal/gdate")
+			rm "$HOME/.Hijri Terminal/gdate"
+		fi
+		if [ -e "$HOME/.Hijri Terminal/gy" ]
+			then gy=$(cat "$HOME/.Hijri Terminal/gy")
+			rm "$HOME/.Hijri Terminal/gy"
+		fi
+		if [ -e "$HOME/.Hijri Terminal/gm" ]
+			then gm=$(cat "$HOME/.Hijri Terminal/gm")
+			rm "$HOME/.Hijri Terminal/gm"
+		fi
+		if [ -e "$HOME/.Hijri Terminal/gd" ]
+			then gd=$(cat "$HOME/.Hijri Terminal/gd")
+			rm "$HOME/.Hijri Terminal/gd"
+		fi
+		rm "$HOME/.Hijri Terminal/args"
+		if ( ! [ "$gy" = "" ])
+			then gdate1="disable"
+		fi
+		if ( ! [ "$gm" = "" ])
+			then gdate1="disable"
+		fi
+		if ( ! [ "$gd" = "" ])
+			then gdate1="disable"
+		fi
+		if [ "$gdate1" = "disable" ]
+			then
+				if [ ! "$gdate" = "" ]
+					then
+						echo "Error : Use only one way to enter gregorian date."
+						exit
+				fi
+		fi
+		touch "$HOME/.Hijri Terminal/args2"
+		g_date=`echo $gdate | sed "s:-: :g" | sed "s_/_ _g" | sed "s_*_ _g" | sed "s_,_ _g"`
+		n=0
+		for item in $g_date
+			do
+				let "n= $n + 1"
+				if [ $n = 1 ]
+					then g=gy
+				elif [ $n = 2 ]
+					then g=gm
+				elif [ $n = 3 ]
+					then g=gd
+				fi
+				echo "$g=$item" >> "$HOME/.Hijri Terminal/args2"
+			done
+		chmod +x "$HOME/.Hijri Terminal/args2"
+		source "$HOME/.Hijri Terminal/args2"
+		rm "$HOME/.Hijri Terminal/args2"
+		if [ "$gy" = "" ]
+			then echo "Error : Enter all required information to calculate."
+			exit
+		fi
+		if [ "$gm" = "" ]
+			then echo "Error : Enter all required information to calculate."
+			exit
+		fi
+		if [ "$gd" = "" ]
+			then echo "Error : Enter all required information to calculate."
+			exit
+		fi
+		kab1="`echo $gy/4 | bc -ql | cut -d'.' -f2`"
+		kab=`echo $kab1 | cut -c 1,2`
+		echo $kab
+		kabisa()
+		{
+		if [ $kab -eq 0 ]
+			then max=29
+			else max=28
+		fi
+		}
+		case $gm in
+		1|3|5|7|8|10|12) max=31 ;;
+		4|6|9|11) max=30 ;;
+		2) kabisa ;;
+		*) echo "Error : Month number is not exist." ; exit
+		esac
+		if [ $gd -gt $max ]
+			then echo "Error : Day number is not exist."
+			exit
+		fi
+		if [ $gy -le 623 ]
+			then echo "Error : Year number is not exist."
+			exit
+		fi
+		hi_end1='Y,M,D=cal.goto_gregorian_day('$gy','$gm','$gd')'
+		nday="`date --date $gy-$gm-$gd +%u`"
+fi
+#---------------------------------------------------------------
+#----Generating-and-run-main-program----------------------------
+#---------------------------------------------------------------
+echo "$hi_header
+$hi_end1
+$hi_end2" > "$HOME/.Hijri Terminal/finalapp"
+chmod +x "$HOME/.Hijri Terminal/finalapp"
+out="`"$HOME/.Hijri Terminal/finalapp"`"
+if [ "$arabic" = "true" ] ; then
+	if [ "$gregorian" = "true" ]
+		then هجري معين $out $nday $gui
+		else هجري
+	fi
+	else echo "$out"
+	rm "$HOME/.Hijri Terminal/finalapp"
+fi
+#---------------------------------------------------------------
+#----Allah-all-thanked-to-help-me-to-write-this-program---------
+#----and-I-ask-him-to-make-the-benefit-for-you------------------
+#----allah-can-do-that------------------------------------------
+#---------------------------------------------------------------
+#----With-our-best-wishes---------------------------------------
+#----almasa-project---------------------------------------------
+#---------------------------------------------------------------

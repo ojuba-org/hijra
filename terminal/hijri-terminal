@@ -235,7 +235,6 @@ if [ "$gregorian" = "true" ]
 		fi
 		kab1="`echo $gy/4 | bc -ql | cut -d'.' -f2`"
 		kab=`echo $kab1 | cut -c 1,2`
-		echo $kab
 		kabisa()
 		{
 		if [ $kab -eq 0 ]

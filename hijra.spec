@@ -85,8 +85,8 @@ Hijri Tray Applet as GNOME shell extension.
         --optimize=2
 install -m 755 terminal/hijri $RPM_BUILD_ROOT/%{_bindir}
 install -m 755 terminal/هجري $RPM_BUILD_ROOT/%{_bindir}
-install -m 644 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
-install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
+install -m 755 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
+install -m 755 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
 
 %files -n hijri
 %doc waqf2-ar.pdf

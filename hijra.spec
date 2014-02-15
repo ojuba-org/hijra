@@ -1,32 +1,41 @@
-Name: hijra
-Summary: Hijri Islamic Calendar utils in python
-URL: http://hijra.ojuba.org
-Version: 0.2.2
-Release: 1%{?dist}
-Source0: %{name}-%{version}.tar.bz2
-License: Waqf
-Group: System Environment/Base
-BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:   python
-Requires:   pygobject3 >= 3.0.2
-BuildRequires: gettext
-BuildRequires: python, python-setuptools
+%global owner ojuba-org
+%global commit #Write commit number here
 
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+Name:		hijra
+Summary:	Hijri Islamic Calendar utils in python
+URL:		http://ojuba.org
+Version:	0.3
+Release:	1%{?dist}
+Source0:	https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
+License:	WAQFv2
+Group:		System Environment/Base
+BuildArch:	noarch
+Requires:	python
+Requires:	pygobject3 >= 3.0.2
+BuildRequires:	gettext
+BuildRequires:	python2-devel
+BuildRequires:	python-setuptools
+
 
 %description
-This is Hijra package from hijra.ojuba.org
-It provides Hijri/Islamic Calendar routines and utils in python
+Hijra provides Hijri/Islamic Calendar routines and utils in python
 
-%package python
-Group: System Environment/Base
-Summary: Hijri Islamic Calendar converting functions for python
-BuildArch: noarch
-Requires: python, setuptool
-%description python
-This is Hijra package from hijra.ojuba.org
+%package -n hijri
+Group:		System Environment/Base
+Summary:	Hijri Terminal
+BuildArch:	noarch
 
+%description -n hijri
+Hijri now very easy in Terminal by this tool.
+
+%package -n python-hijra
+Group:		System Environment/Base
+Summary:	Hijri Islamic Calendar converting functions for python
+BuildArch:	noarch
+Requires:	python
+Requires:	setuptool
+
+%description -n python-hijra
 Hijri Islamic Calendar converting functions,
 an enhanced algorithm designed by Muayyad Saleh Alsadi<alsadi@gmail.com>
 it can be used to implement apps, gdesklets or karamba ..etc
@@ -40,55 +49,69 @@ having 30 days in a span of 360 years, other months are 29 days.
 and a is just a shift.
 
 %package applet
-Summary: Hijri Tray Applet for GNOME (also works with KDE)
-Group: System Environment/Base
-BuildArch: noarch
-Requires: python, pygtk2, notify-python, desktop-notification-daemon
-Requires: hijra-python
-Requires(post): desktop-file-utils
+Summary:	Hijri Tray Applet for GNOME (also works with KDE)
+Group:		System Environment/Base
+BuildArch:	noarch
+Requires:	python
+Requires:	pygtk2
+Requires:	notify-python
+Requires:	desktop-notification-daemon
+Requires:	python-hijra
+Requires:	desktop-file-utils
+
 %description applet
 Hijri Tray Applet for GNOME (also works with KDE)
 That uses Hijra Algorithm by Muayyad Saleh Alsadi<alsadi@gmail.com>
 provided by python-hijra package
 
 %package -n gnome-shell-extension-hijra
-Summary: gnome-shell extension to move hijri calendar
-Group: System Environment/Base
-BuildArch: noarch
-Requires: hijra-applet
-%description -n gnome-shell-extension-hijra
+Summary:	gnome-shell extension to move hijri calendar
+Group:		System Environment/Base
+BuildArch:	noarch
+Requires:	hijra-applet
 
+%description -n gnome-shell-extension-hijra
+Hijri Tray Applet as GNOME shell extension.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{commit}
+
 %build
+# No thing to Build.
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-%{__python} setup.py install \
+%{__python2} setup.py install \
         --root=$RPM_BUILD_ROOT \
         --optimize=2
-%post applet
+install -m 755 terminal/hijri $RPM_BUILD_ROOT/%{_bindir}
+install -m 755 terminal/هجري $RPM_BUILD_ROOT/%{_bindir}
+install -m 644 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
+install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%files -n hijri
+%doc waqf2-ar.pdf
+%{_datadir}/HijriTerminal
+%{_bindir}/hijri
+%{_bindir}/هجري
 
-%files python
-/usr/share/doc/hijra-python/*
-%doc LICENSE-ar.txt LICENSE-en
-%{python_sitelib}/*
+%files -n python-hijra
+%{_datadir}/doc/hijra-python/*
+%doc waqf2-ar.pdf
+%{python2_sitelib}/*
+
 %files applet
-%doc readme-ar.html LICENSE-ar.txt LICENSE-en
-/usr/bin/*
-/usr/share/hijra/*
+%doc readme-ar.html waqf2-ar.pdf
+%{_bindir}/HijriApplet
+%{_datadir}/hijra/*
 /etc/xdg/autostart/*
 
 %files -n gnome-shell-extension-hijra
-/usr/share/gnome-shell/extensions/HijriApplet@ojuba.org/*
-
+%{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3-1
+- Full Rivision.
+
 * Sun Jun 2 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.2-1
 - port to gtk3, webkit3
 
@@ -135,4 +158,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Sat Jun 28 2008  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.8-1
 - Initial packing
-

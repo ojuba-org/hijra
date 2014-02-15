@@ -4,7 +4,7 @@
 Name:		hijra
 Summary:	Hijri Islamic Calendar utils in python
 URL:		http://ojuba.org
-Version:	0.3
+Version:	0.3.1
 Release:	1%{?dist}
 Source0:	https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
 License:	WAQFv2
@@ -83,10 +83,11 @@ Hijri Tray Applet as GNOME shell extension.
 %{__python2} setup.py install \
         --root=$RPM_BUILD_ROOT \
         --optimize=2
+mkdir $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 install -m 755 terminal/hijri $RPM_BUILD_ROOT/%{_bindir}
 install -m 755 terminal/هجري $RPM_BUILD_ROOT/%{_bindir}
-install -m 755 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
-install -m 755 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
+install -m 644 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/hijri.py
+install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 
 %files -n hijri
 %doc waqf2-ar.pdf
@@ -109,6 +110,9 @@ install -m 755 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.1-1
+- Fixes.
+
 * Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3-1
 - Full Rivision.
 

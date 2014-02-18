@@ -111,10 +111,9 @@ install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 
 %changelog
 * Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.1-1
-- Fixes.
-
-* Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3-1
+- Almasa Hijri program included into Hijra.
 - Full Rivision.
+- Fixes.
 
 * Sun Jun 2 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.2-1
 - port to gtk3, webkit3

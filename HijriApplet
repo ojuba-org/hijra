@@ -30,7 +30,7 @@ The algorith itself is not here, it's in another file called hijra.py
 # TODO: Implement configuration, ie. allow direction change, and setting first way of week
 
 import sys, os, os.path, time, re
-from gi.repository import GObject, Gtk
+from gi.repository import GObject, Gtk, Gdk
 
 import sys
 
@@ -44,6 +44,25 @@ except ImportError:
 from HijriCal import HijriCal
 cal = HijriCal()
 
+Colors = [[(Gdk.Color(red=60909, green=60909, blue=60909),
+            Gdk.Color(red=11822, green=13364, blue=13878),
+            '#edededededed', '#2e2e34343636'),
+           (Gdk.Color(red=19018, green=37008, blue=55769),
+            Gdk.Color(red=65535, green=65535, blue=65535),
+            '#4a4a9090d9d9', 'wheat'),
+           (Gdk.Color(red=62708, green=62708, blue=62194),
+            Gdk.Color(red=42919, green=43947, blue=42919),
+            '#f4f4f4f4f2f2', '#a7a7ababa7a7')], 
+          [(Gdk.Color(red=11822, green=13364, blue=13878),
+           Gdk.Color(red=60909, green=60909, blue=60909),
+           '#2e2e34343636', '#edededededed'),
+          (Gdk.Color(red=65535, green=65535, blue=65535),
+           Gdk.Color(red=19018, green=37008, blue=55769),
+           '#ffffffffffff', '#4a4a9090d9d9'),
+          (Gdk.Color(red=60909, green=60909, blue=60909),
+            Gdk.Color(red=11822, green=13364, blue=13878),
+            '#edededededed', '#2e2e34343636')]]
+
 week_days = [ "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت" ]
 months = [
   "محرم","صفر","ربيع الأول","ربيع الثاني",
@@ -51,9 +70,9 @@ months = [
   "رمضان","شوال","ذو القعدة","ذو الحجة"
   ]
 gmonths = [
-  "كانون ثاني", "شباط", "آذار", "نيسان",
-  "أيار", "حزيران","تموز","آب",
-  "أيلول", "تشرين أول", "تشرين ثاني", "كانون أول"
+  "كانون ثاني ( يناير )", "شباط ( فبراير )", "آذار ( مارس )", "نيسان ( أبريل )",
+  "أيار ( مايو )", "حزيران ( يونيو )","تموز ( يوليو )","آب ( أغسطس )",
+  "أيلول ( سبتمبر )", "تشرين أول ( أكتوبر )", "تشرين ثاني ( نوفمبر )", "كانون أول ( ديسمبر )"
   ]
 
 def wday_index(i):
@@ -301,13 +320,20 @@ class CalWindow(Gtk.Window):
 
     def get_theme_colors(self):
         # colors[is_holyday][normal selected inactive]=[fg,bg,fg_s,bg_s]
+        self.colors = Colors
+        return self.colors
+        
         colors = [[[0 for i in 1,2,3,4] for j in 1,2,3] for k in 1,2]
         m = Gtk.Window.get_style(self)
+        if not m.bg:
+            self.colors = Colors
+            return self.colors
         for i,s in enumerate((Gtk.StateType.NORMAL,
                               Gtk.StateType.SELECTED,
                               Gtk.StateType.INSENSITIVE)):
             fg, bg = m.fg[s], m.bg[s]
             colors[0][i] = bg, fg, bg.to_string(), fg.to_string()
+            
             colors[1][i] = fg, bg, fg.to_string(), bg.to_string()
         self.colors = colors
         return self.colors
@@ -344,7 +370,7 @@ class CalWindow(Gtk.Window):
                     is_holyday = 1
                 else:
                     is_holyday = 0
-                self.cell[j][i].set_markup('<span size="large" weight="bold" foreground="%s" background="%s">%02d</span>\n<span size="small" weight="bold" foreground="grey">%02d/%02d</span>' % 
+                self.cell[j][i].set_markup('<span size="large" weight="bold" foreground="%s" background="%s">%02d</span>\n<span size="small" weight="bold" foreground="navy">%02d/%02d</span>' % 
                                              (colors[is_holyday][is_selected][2],
                                              colors[is_holyday][is_selected][3],
                                              a[j][i],

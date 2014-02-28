@@ -110,7 +110,7 @@ install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
-* Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-1
+* Fri Feb 28 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-1
 - Disable notify.
 
 * Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.1-1

@@ -4,7 +4,7 @@
 Name:		hijra
 Summary:	Hijri Islamic Calendar utils in python
 URL:		http://ojuba.org
-Version:	0.3.1
+Version:	0.3.2
 Release:	1%{?dist}
 Source0:	https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
 License:	WAQFv2
@@ -110,6 +110,9 @@ install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-1
+- Disable notify.
+
 * Sat Feb 15 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.1-1
 - Almasa Hijri program included into Hijra.
 - Full Rivision.

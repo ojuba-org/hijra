@@ -34,7 +34,7 @@ from gi.repository import GObject, Gtk, Gdk
 
 import sys
 
-no_notify = False
+no_notify = True
 
 try:
     from gi.repository import Notify as pynotify

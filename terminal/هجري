@@ -1,24 +1,24 @@
 #! /bin/bash
-# Hijri Terminal 3.1
+# Hijri Terminal 3.2
 # Under Waqf License 
 # By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
 # Almasa Project
-# 1434-4-9
+# 1436-10-5
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #---------------------------------------------------------------
-ver=$(hijri-terminal -v)
+ver=$(hijri -v)
 arg="$@"
 arg1="$1"
 arg2="$2"
 arg3="$3"
 arg4="$4"
 arg5="$5"
-about="$(hijri-terminal -a arabic)"
+about="$(hijri -a arabic)"
 nday=$(date +%u)
-day=$(hijri-terminal -d)
-month=$(hijri-terminal -m)
-year=$(hijri-terminal -y)
+day=$(hijri -d)
+month=$(hijri -m)
+year=$(hijri -y)
 if [ "$arg1" = "معين" ]
 	then
 		nday=$arg5

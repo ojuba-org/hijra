@@ -1,9 +1,9 @@
 #! /bin/bash
-# Hijri Terminal 3.1
+# Hijri Terminal 3.2
 # Under Waqf License 
 # By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
 # Almasa Project
-# 1434-4-9
+# 1436-10-5
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #----Main-vars--------------------------------------------------
@@ -11,27 +11,28 @@
 hi_dir="/usr/share/HijriTerminal"
 hi_arg="$@"
 hi_arg1="$1"
-hi_ver="3.1"
+hi_ver="3.2"
+hi_rel="1436-10-5"
 hi_end1="Y,M,D,W=cal.today"
 hi_end2="print Y,M,D"
 hi_header='#! /usr/bin/env python
 """
-Hijri Terminal 3.1
+Hijri Terminal '$hi_ver'
 
 Under Waqf License 
 By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
 Almasa project
-1434-4-9
+'$hi_rel'
 """
 import sys
 from HijriCal import HijriCal
 cal=HijriCal()
 '
-hi_help="~~ Hijri Terminal 3.1 ~~
+hi_help="~~ Hijri Terminal $hi_ver ~~
 Print Hijri date on terminal .
 
 Usage :
-hijri-terminal [options] [args] 
+hijri [options] [args] 
 
 Options :
 No options shows date of this day.
@@ -51,18 +52,18 @@ gy=<Number> Enter value of custom gregorian year.
 gdate=<Date> Enter custom date of these formats : 
 yyyy-mm-dd yyyy*mm*dd yyyy/mm/dd yyyy,mm,dd
 and you can enter less numbers like yyy-m-d .
-Examples : hijri-terminal
-hijri-terminal -y
-hijri-terminal -g gdate=2005-8-9
-hijri-terminal gregorian gd=9 gm=7 gy=958"
-hi_about="~~ Hijri Terminal 3.1 ~~
+Examples : hijri
+hijri -y
+hijri -g gdate=2005-8-9
+hijri gregorian gd=9 gm=7 gy=958"
+hi_about="~~ Hijri Terminal $hi_ver ~~
 
 Under Waqf License 
 By Mosaab Alzoubi (moceap@hotmail.com - facebook.com/moceap)
 Almasa project
-1434-4-9
+$hi_rel
 
-Hijri Terminal 3.1 also contain this two parts :
+Hijri Terminal $hi_ver also contain this two parts :
 
 *** Hijri Islamic Calendar converting functions,
 Copyright (c) 2006-2008 Muayyad Saleh Alsadi<alsadi@gmail.com>
@@ -72,14 +73,14 @@ Under Waqf License
 Copyright (c) 2006-2008 Muayyad Saleh Alsadi<alsadi@gmail.com>
 Under Waqf License 
 "
-hi_aboutar="~~ هجري الطرفية 3.1 ~~
+hi_aboutar="~~ هجري الطرفية $hi_ver ~~
 
 منشور تحت بنود رخصة وقف
 بواسطة مصعب حسني الزعبي (moceap@hotmail.com - facebook.com/moceap)
 مشروع ألماسه
-الأربعاء التاسع من شهر ربيع الثاني سنة أربع وثلاثين وأربعمئة وألف
+$hi_rel
 
-هجري الطرفية 3.1 يحتوي أيضاً على الجزئيتين :
+هجري الطرفية $hi_ver يحتوي أيضاً على الجزئيتين :
 
 1 - دالات التحويل في التقويم الهجري الإسلامي
 منشورة برخصة وقف 2006 - 2008 بواسطة :

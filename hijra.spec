@@ -93,7 +93,7 @@ Hijri Tray Applet as GNOME shell extension.
         --root=%{buildroot} \
         --optimize=2
 mkdir %{buildroot}/%{_datadir}/HijriTerminal/
-mkdir %{buildroot}%{_mandir}/man1/
+mkdir -p %{buildroot}%{_mandir}/man1/
 install -m 755 terminal/hijri %{buildroot}/%{_bindir}
 install -m 755 terminal/هجري %{buildroot}/%{_bindir}
 install -m 644 hijra.py %{buildroot}/%{_datadir}/HijriTerminal/
@@ -138,13 +138,13 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 - Full Rivision.
 - Fixes.
 
-* Sun Jun 2 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.2-1
+* Sat Jun 2 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.2-1
 - port to gtk3, webkit3
 
 * Fri Jan 13 2012  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.1-1
 - update for gnome 3.2 support
 
-* Wed Jul 20 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.0-1
+* Mon Jul 20 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.2.0-1
 - gnome 3 support
 
 * Sat Feb 14 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.18-1
@@ -166,7 +166,7 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 * Sat Jan 3 2009  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.13-1
 - add tooltips
 
-* Sat Dec 31 2008  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.12-1
+* Wed Dec 31 2008  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.12-1
 - fix 31 Dec bug
 
 * Sat Dec 20 2008  Muayyad Saleh AlSadi <alsadi@ojuba.org> - 0.1.11-2

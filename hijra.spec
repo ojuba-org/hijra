@@ -1,77 +1,86 @@
 %global owner ojuba-org
 %global commit #Write commit number here
 
-Name:		hijra
-Summary:	Hijri Islamic Calendar utils in python
-URL:		http://ojuba.org
-Version:	0.3.2
-Release:	1%{?dist}
-Source0:	https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
-License:	WAQFv2
-Group:		System Environment/Base
-BuildArch:	noarch
-Requires:	python
-Requires:	pygobject3 >= 3.0.2
-BuildRequires:	gettext
-BuildRequires:	python2-devel
-BuildRequires:	python-setuptools
-
+Name: hijra
+Summary: Hijri Islamic Calendar
+Summary(ar): التّقويم الهجري الإسلامي
+URL: http://ojuba.org
+Version: 0.3.2
+Release: 2%{?dist}
+Source0: https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
+License: WAQFv2
+BuildArch: noarch
+Requires: python
+Requires: pygobject3 >= 3.0.2
+BuildRequires: gettext
+BuildRequires: python2-devel
+BuildRequires: python-setuptools
 
 %description
-Hijra provides Hijri/Islamic Calendar routines and utils in python
+Hijra provides Hijri/Islamic Calendar routines and utils in python.
+
+%description -l ar
+يقدّم هجرة أدوات التّقويم الهجري الإسلامي في بيثون.
 
 %package -n hijri
-Group:		System Environment/Base
-Summary:	Hijri Terminal
-BuildArch:	noarch
+Summary: Hijri Terminal
+Summary(ar): هجري الطّرفية
+BuildArch: noarch
 
 %description -n hijri
-Hijri now very easy in Terminal by this tool.
+Using all Hijra operations in terminal.
+
+%description -n hijri -l ar
+جميع خصائص برنامج هجرة في الطّرفية.
 
 %package -n python-hijra
-Group:		System Environment/Base
-Summary:	Hijri Islamic Calendar converting functions for python
-BuildArch:	noarch
-Requires:	python
-Requires:	setuptool
+Summary: Hijri functions for python
+Summary(ar): وظائف هجرة لبيثون
+BuildArch: noarch
+Requires: python
+Requires: setuptool
 
 %description -n python-hijra
 Hijri Islamic Calendar converting functions,
-an enhanced algorithm designed by Muayyad Saleh Alsadi<alsadi@gmail.com>
-it can be used to implement apps, gdesklets or karamba ..etc
+an enhanced algorithm designed by Muayyad
+Saleh Alsadi, it can be used to implement apps,
+gdesklets or karamba ..etc
 
-This algorithm is based on integer operations
-which that there is no round errors (given accurate coefficients)
-the accuracy of this algorithm is based on 3 constants (p,q and a)
-where p/q is the full months percentage [ gcd(p,q) must be 1 ]
-currently it's set to 191/360 which mean that there is 191 months
-having 30 days in a span of 360 years, other months are 29 days.
-and a is just a shift.
+%description -n python-hijra -l ar
+الوظائف التّحويلية للتّقويم الهجري الإسلامي بخوارزمية مُحسّنة
+مُصمّمة بواسطة مؤيّد صالح السّعدي، يُمكن استخدامها و غرسها في
+أدوات سطح المكتب مثل كارامبا .. و غيره.
 
 %package applet
-Summary:	Hijri Tray Applet for GNOME (also works with KDE)
-Group:		System Environment/Base
-BuildArch:	noarch
-Requires:	python
-Requires:	pygtk2
-Requires:	notify-python
-Requires:	desktop-notification-daemon
-Requires:	python-hijra
-Requires:	desktop-file-utils
+Summary: Hijri Tray Applet
+Summary(ar): بريمج هجرة لصينية النّظام
+BuildArch: noarch
+Requires: python
+Requires: pygtk2
+Requires: notify-python
+Requires: desktop-notification-daemon
+Requires: python-hijra
+Requires: desktop-file-utils
 
 %description applet
 Hijri Tray Applet for GNOME (also works with KDE)
-That uses Hijra Algorithm by Muayyad Saleh Alsadi<alsadi@gmail.com>
-provided by python-hijra package
+That uses Hijra Algorithm provided by python-hijra.
+
+%description applet -l ar
+بريمج هجرة لصينية النّظام لجنوم (ويعمل أيضًا بكدي)
+باستعمال خوارزمية هجرة من python-hijra.
 
 %package -n gnome-shell-extension-hijra
-Summary:	gnome-shell extension to move hijri calendar
-Group:		System Environment/Base
-BuildArch:	noarch
-Requires:	hijra-applet
+Summary: Hijri Gnome-shell extension
+Summary(ar): امتداد هجرة لجنوم شل
+BuildArch: noarch
+Requires: hijra-applet
 
 %description -n gnome-shell-extension-hijra
 Hijri Tray Applet as GNOME shell extension.
+
+%description -n gnome-shell-extension-hijra -l ar
+بريمج صينية النّظام هجرة كامتداد جنوم شل.
 
 %prep
 %setup -q -n %{name}-%{commit}
@@ -81,27 +90,31 @@ Hijri Tray Applet as GNOME shell extension.
 
 %install
 %{__python2} setup.py install \
-        --root=$RPM_BUILD_ROOT \
+        --root=%{buildroot} \
         --optimize=2
-mkdir $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
-install -m 755 terminal/hijri $RPM_BUILD_ROOT/%{_bindir}
-install -m 755 terminal/هجري $RPM_BUILD_ROOT/%{_bindir}
-install -m 644 hijra.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/hijri.py
-install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
+mkdir %{buildroot}/%{_datadir}/HijriTerminal/
+mkdir %{buildroot}%{_mandir}/man1/
+install -m 755 terminal/hijri %{buildroot}/%{_bindir}
+install -m 755 terminal/هجري %{buildroot}/%{_bindir}
+install -m 644 hijra.py %{buildroot}/%{_datadir}/HijriTerminal/
+install -m 644 HijriCal.py %{buildroot}/%{_datadir}/HijriTerminal/
+install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 
 %files -n hijri
-%doc waqf2-ar.pdf
+%license waqf2-ar.pdf
 %{_datadir}/HijriTerminal
 %{_bindir}/hijri
 %{_bindir}/هجري
+%{_mandir}/*/hijri.*
 
 %files -n python-hijra
+%license waqf2-ar.pdf
 %{_datadir}/doc/hijra-python/*
-%doc waqf2-ar.pdf
 %{python2_sitelib}/*
 
 %files applet
-%doc readme-ar.html waqf2-ar.pdf
+%license waqf2-ar.pdf
+%doc readme-ar.html
 %{_bindir}/HijriApplet
 %{_datadir}/hijra/*
 /etc/xdg/autostart/*
@@ -110,6 +123,13 @@ install -m 644 HijriCal.py $RPM_BUILD_ROOT/%{_datadir}/HijriTerminal/
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Thu Jul 23 2015 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-2
+- General Revision
+- Use %%license
+- Remove old Group tag
+- Add man pages
+- Add Arabic Summaries and Descriptions
+
 * Fri Feb 28 2014 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-1
 - Disable notify.
 

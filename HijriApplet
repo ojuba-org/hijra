@@ -30,6 +30,8 @@ The algorith itself is not here, it's in another file called hijra.py
 # TODO: Implement configuration, ie. allow direction change, and setting first way of week
 
 import sys, os, os.path, time, re
+import gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import GObject, Gtk, Gdk
 
 import sys
@@ -37,6 +39,8 @@ import sys
 no_notify = True
 
 try:
+    from gi.repository import require_version
+    require_version('Notify', '0.7')
     from gi.repository import Notify as pynotify
 except ImportError:
     no_notify=True
@@ -126,7 +130,10 @@ class CalAbout(Gtk.AboutDialog):
             pass
         self.set_name("التقويم الهجري")
         #self.set_version(version)
-        self.set_copyright("Copyright (c) 2006-2008 Muayyad Saleh Alsadi <alsadi@gmail.com>")
+        self.set_copyright("""
+            Copyright (c) 2006-2011 Muayyad Saleh Alsadi <alsadi@gmail.com>
+            Copyright (c) 2011-2017 Ojuba Team <http://ojuba.org>
+            """)
         self.set_comments("Hijri Islamic Calendar")
         self.set_license("""
             Released under terms on Waqf Public License.

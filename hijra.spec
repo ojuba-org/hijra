@@ -117,7 +117,6 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 %{_bindir}/HijriApplet
 %{_datadir}/hijra/*
 /etc/xdg/autostart/*
-%{_datadir}/appdata/%{name}.appdata.xml
 
 %files -n gnome-shell-extension-hijra
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*

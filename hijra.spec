@@ -1,13 +1,12 @@
 %global owner ojuba-org
-%global commit #Write commit number here
 
 Name: hijra
 Summary: Hijri Islamic Calendar
 Summary(ar): التّقويم الهجري الإسلامي
 URL: http://ojuba.org
-Version: 0.3.2
-Release: 2%{?dist}
-Source0: https://github.com/%{owner}/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
+Version: 0.4
+Release: 1%{?dist}
+Source0: https://github.com/%{owner}/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
 License: WAQFv2
 BuildArch: noarch
 Requires: python
@@ -83,7 +82,7 @@ Hijri Tray Applet as GNOME shell extension.
 بريمج صينية النّظام هجرة كامتداد جنوم شل.
 
 %prep
-%setup -q -n %{name}-%{commit}
+%autosetup -n %{name}-%{version}
 
 %build
 # No thing to Build.
@@ -118,11 +117,16 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 %{_bindir}/HijriApplet
 %{_datadir}/hijra/*
 /etc/xdg/autostart/*
+%{_datadir}/appdata/%{name}.appdata.xml
 
 %files -n gnome-shell-extension-hijra
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Mon Jan 30 2017 Mosaab Alzoubi <moceap@hotmail.com> - 0.4-1
+- Update to 0.4
+- New way to Github
+
 * Thu Jul 23 2015 Mosaab Alzoubi <moceap@hotmail.com> - 0.3.2-2
 - General Revision
 - Use %%license

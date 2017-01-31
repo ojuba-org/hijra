@@ -3,11 +3,10 @@ Name=Hijra Applet
 Name[ar]=بريمج هجرة
 Comment=Hijri calendar in system tray icon
 Comment[ar]=بريمج تقويم هجري
-Exec=/usr/bin/HijriApplet --hidden
+Exec=env GDK_BACKEND=x11 /usr/bin/HijriApplet --hidden
 Terminal=false
 Type=Application
 Icon=gnome-calendar
 X-KDE-autostart-after=panel
 StartupNotify=false
 Categories=X-Islamic-Software;Utility;
-

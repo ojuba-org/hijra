@@ -4,7 +4,7 @@ Name: hijra
 Summary: Hijri Islamic Calendar
 Summary(ar): التّقويم الهجري الإسلامي
 URL: http://ojuba.org
-Version: 0.4
+Version: 0.4.1
 Release: 1%{?dist}
 Source0: https://github.com/%{owner}/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
 License: WAQFv2
@@ -95,7 +95,7 @@ mkdir %{buildroot}/%{_datadir}/HijriTerminal/
 mkdir -p %{buildroot}%{_mandir}/man1/
 install -m 755 terminal/hijri %{buildroot}/%{_bindir}
 install -m 755 terminal/هجري %{buildroot}/%{_bindir}
-install -m 644 hijra.py %{buildroot}/%{_datadir}/HijriTerminal/
+install -m 644 hijra.py %{buildroot}/%{_datadir}/HijriTerminal/hijri.py
 install -m 644 HijriCal.py %{buildroot}/%{_datadir}/HijriTerminal/
 install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 
@@ -122,6 +122,11 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+* Wed Feb 1 2017 Mosaab Alzoubi <moceap@hotmail.com> - 0.4.1-1
+- Support running under Wayland
+- Fix Hijri errors
+- Fix Python Gi warnings
+
 * Mon Jan 30 2017 Mosaab Alzoubi <moceap@hotmail.com> - 0.4-1
 - Update to 0.4
 - New way to Github

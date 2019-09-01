@@ -79,7 +79,7 @@ def hijri_days_before_month(Y,M):
    Mc = ( Y -1) *12 + 1 + __a_const
    McM=Mc * __p_const
    sum=0
-   for i in xrange(1,M):
+   for i in range(1,M):
       if (McM % __q_const)  < __p_const : sum+=30
       else: sum+=29
       McM+=__p_const
@@ -124,7 +124,7 @@ def hijri_to_absolute (Y, M, D):
    y=Y-Mc/12
    dc+=Mc*29 + Mc*__p_const/__q_const
    # plus those after the multiples plus (...)
-   for i in xrange(1,y): dc+=hijri_year_days(i)
+   for i in range(1,y): dc+=hijri_year_days(i)
    # plus days from the begining of that year
    dc+=hijri_day_number (Y, M, D) - 1
    return dc
@@ -282,18 +282,18 @@ def gregorian_day_of_week (yy, mm, dd):
 def test1():
   global __a_const;
   __a_const=48
-  for __a_const in xrange(0,100): unmatched=0; from_y=1; to_y=4001
-  for y in xrange(from_y,to_y):
+  for __a_const in range(0,100): unmatched=0; from_y=1; to_y=4001
+  for y in range(from_y,to_y):
     if hijri_days(y)!=emacs_hijri_days(y): unmatched+=1
-  print "%d years (%g %%) unmatched when a=%d" % (unmatched, float(float(unmatched)/(to_y-from_y)), __a_const)
+  print("%d years (%g %%) unmatched when a=%d" % (unmatched, float(float(unmatched)/(to_y-from_y)), __a_const))
   __a_const=48
   sum=0.0
-  for y in xrange(1,4001): sum+=hijri_days(y)
-  print "year len=%f " % float(float(sum)/4000.0*100.0)
+  for y in range(1,4001): sum+=hijri_days(y)
+  print("year len=%f " % float(float(sum)/4000.0*100.0))
   __a_const=47
   sum=0.0
-  for y in xrange(1,4001): sum+=hijri_days(y)
-  print "year len=%f " % float(float(sum)/4000.0*100.0)
+  for y in range(1,4001): sum+=hijri_days(y)
+  print("year len=%f " % float(float(sum)/4000.0*100.0))
 ##########################
 if __name__ == "__main__":
    # conclusion
@@ -305,36 +305,36 @@ if __name__ == "__main__":
    # 73% for a=45 47 49 ..etc.
    ##########################
    __a_const=16
-   print "for a=%d" % __a_const
+   print("for a=%d" % __a_const)
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,12)==30)
-   print "perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,12)==30)
+   print("perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0))
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,9)==30)
-   print "perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,9)==30)
+   print("perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0))
    
    __a_const=48
-   print "for a=%d" % __a_const
+   print("for a=%d" % __a_const)
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,12)==30)
-   print "perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,12)==30)
+   print("perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0))
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,9)==30)
-   print "perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,9)==30)
+   print("perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0))
    
    __a_const=65
-   print "for a=%d" % __a_const
+   print("for a=%d" % __a_const)
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,12)==30)
-   print "perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,12)==30)
+   print("perfect thu-hijja months is %f %% " % float(float(sum)/4000.0*100.0))
    sum=0.0
-   for y in xrange(1,4001): sum+= float(hijri_month_days(y,9)==30)
-   print "perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0)
+   for y in range(1,4001): sum+= float(hijri_month_days(y,9)==30)
+   print("perfect Ramadan months is %f %% " % float(float(sum)/4000.0*100.0))
    
    __a_const=48
-   print "for a=%d" % __a_const
-   for m in xrange(1,13):
+   print("for a=%d" % __a_const)
+   for m in range(1,13):
       sum=0.0
-      for y in xrange(1,4001): sum+= float(hijri_month_days(y,m)==30)
-      print "perfect %d months is %f %% " % (m,float(float(sum)/4000.0*100.0))
+      for y in range(1,4001): sum+= float(hijri_month_days(y,m)==30)
+      print("perfect %d months is %f %% " % (m,float(float(sum)/4000.0*100.0)))
 

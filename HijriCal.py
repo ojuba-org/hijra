@@ -73,12 +73,12 @@ class HijriCal:
       Y,M,D = self.Y,self.M, 1
       gy,gm,gd=hijri_to_gregorian(Y,M,D)
       gn=gregorian_month_days(gy,gm)
-      for i in xrange(6):
-         for j in xrange(7): self.__md[i][j]=""; self.__g_md[i][j]=""
+      for i in range(6):
+         for j in range(7): self.__md[i][j]=""; self.__g_md[i][j]=""
       row=0
       if self.__direct>0: col=self.ms; endcol=7; icol=0
       else: col=6-self.ms; endcol=-1; icol=6
-      for i in xrange(self.mn):
+      for i in range(self.mn):
          self.__md[row][col]=i+1;
 	 self.__g_md[row][col]=(gd,gm,gy); gd+=1;
 	 if (gd>gn):

@@ -330,7 +330,7 @@ class CalWindow(Gtk.Window):
         self.colors = Colors
         return self.colors
         
-        colors = [[[0 for i in 1,2,3,4] for j in 1,2,3] for k in 1,2]
+        colors = [[[0 for i in (1,2,3,4)] for j in (1,2,3)] for k in (1,2)]
         m = Gtk.Window.get_style(self)
         if not m.bg:
             self.colors = Colors
@@ -597,11 +597,11 @@ def init_dbus():
     # values from /usr/include/dbus-1.0/dbus/dbus-shared.h
     r = bus.request_name('org.freedesktop.HijriApplet', flags = 0x4)
     if r != 1:
-        print "Another process own HijriApplet Service, ask it to show up: "
+        print("Another process own HijriApplet Service, ask it to show up: ")
         trials = 0
         appletbus = False
         while(appletbus == False and trials < 20):
-            print ".",
+            print(".", end=' ')
             try:
                 appletbus = bus.get_object("org.freedesktop.HijriApplet","/Manager")
                 break
@@ -609,11 +609,11 @@ def init_dbus():
                 appletbus = False
             time.sleep(1)
             trials += 1
-        print "*"
+        print("*")
         if appletbus:
             appletbus.Show(dbus_interface = 'org.freedesktop.HijriApplet')
         else:
-            print "unable to connect"
+            print("unable to connect")
         exit(0)
     bus_name = dbus.service.BusName("org.freedesktop.HijriApplet", bus)
     bus_object = Manager(bus, '/Manager')

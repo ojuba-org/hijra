@@ -264,7 +264,7 @@ class CalWindow(Gtk.Window):
                         0, 0)
         for n in range(42):
             i = n%7
-            j = n/7
+            j = int(n/7)
             cell[j][i] = Gtk.Label("-")
             cell[j][i].set_alignment(0.5,0.5)
             cell[j][i].set_justify(Gtk.Justification.CENTER)
@@ -367,7 +367,7 @@ class CalWindow(Gtk.Window):
             c.modify_bg(Gtk.StateType.NORMAL, colors[1][1][1])
         for n in range(42):
             i = n%7
-            j = n/7
+            j = int(n/7)
             if (a[j][i]):
                 if a[j][i] == self.cal.D:
                     is_selected = 0
@@ -430,6 +430,10 @@ class CalStatusIcon(Gtk.StatusIcon):
         yy, mm, dd = self.cal.g_today
         self.connect ('button-press-event', self.clicked_cb)
         self.set_title("التقويم الهجري")
+        Y=int(Y);
+        M=int(M);
+        D=int(D);
+        W=int(W);
         self.last_d_m = "%02d/%02d" % (D, M)
         self.set_tooltip_text("%s, %d من %s لعام %d" % (week_days[W], D, months[M-1], Y))
         svg_fn = update_icon_file(D, M)

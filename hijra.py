@@ -121,8 +121,8 @@ def hijri_to_absolute (Y, M, D):
    dc=__hijri_epoch
    # plus days in the years before till first multiples of q plus (...)
    Mc-=Mc % __q_const
-   y=Y-Mc/12
-   dc+=Mc*29 + Mc*__p_const/__q_const
+   y=int(Y-Mc/12)
+   dc+=int(Mc*29 + Mc*__p_const/__q_const)
    # plus those after the multiples plus (...)
    for i in range(1,y): dc+=hijri_year_days(i)
    # plus days from the begining of that year
@@ -166,8 +166,8 @@ def hijri_month_days_(y,m):
 def absolute_to_hijri (date):
    """Return Hijri date (Y,M,D) corresponding to the given absolute number of days."""
    if date < __hijri_epoch: return None; # pre-Islamic date
-   Mc=(date-__hijri_epoch+1)*__q_const/(29*__q_const+__p_const)
-   Y=Mc/12+1; M=(Mc%12)+1
+   Mc=int((date-__hijri_epoch+1)*__q_const/(29*__q_const+__p_const))
+   Y=int(Mc/12)+1; M=(Mc%12)+1
    # consistency check
    d=hijri_to_absolute(Y,M,1) # TODO: this is an expensive call
    if (date < d): # go one month back if needed
@@ -249,13 +249,13 @@ Gregorian date Sunday, December 31, 1 BC."""
 # Clamen, Software--Practice and Experience, Volume 23, Number 4
 # (April, 1993), pages 383-404 for an explanation.
    d0 = date - 1;
-   n400 = d0 / 146097;
+   n400 = int(d0 / 146097);
    d1 = d0 % 146097;
-   n100 = d1 / 36524;
+   n100 = int(d1 / 36524);
    d2 = d1 % 36524;
-   n4 = d2 / 1461;
+   n4 = int(d2 / 1461);
    d3 = d2 % 1461;
-   n1 = d3 / 365;
+   n1 = int(d3 / 365);
    dd = (d3 % 365) + 1;
    yy = ((400 * n400) + (100 * n100) + (n4 * 4) + n1);
    if (n100 == 4) or (n1 == 4): return (yy, 12, 31);

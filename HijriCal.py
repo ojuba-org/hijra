@@ -73,19 +73,19 @@ class HijriCal:
       Y,M,D = self.Y,self.M, 1
       gy,gm,gd=hijri_to_gregorian(Y,M,D)
       gn=gregorian_month_days(gy,gm)
-      for i in xrange(6):
-         for j in xrange(7): self.__md[i][j]=""; self.__g_md[i][j]=""
+      for i in range(6):
+         for j in range(7): self.__md[i][j]=""; self.__g_md[i][j]=""
       row=0
       if self.__direct>0: col=self.ms; endcol=7; icol=0
       else: col=6-self.ms; endcol=-1; icol=6
-      for i in xrange(self.mn):
+      for i in range(self.mn):
          self.__md[row][col]=i+1;
-	 self.__g_md[row][col]=(gd,gm,gy); gd+=1;
-	 if (gd>gn):
+         self.__g_md[row][col]=(gd,gm,gy); gd+=1;
+         if (gd>gn):
             gd=1; gm+=1
-	    if gm>12: gm=1; gy+=1
-	 col+=self.__direct;
-	 if (col==endcol): row+=1; col=icol
+            if gm>12: gm=1; gy+=1
+         col+=self.__direct;
+         if (col==endcol): row+=1; col=icol
 
    def validate(self):
       """Make sure the the current Y,M,D is a a valid date, return 0 if it's already valid"""

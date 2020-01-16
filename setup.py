@@ -1,11 +1,11 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 from distutils.core import setup
 from glob import *
 # to install type: 
 # python setup.py install --root=/
 
-setup (name='hijra', version='0.1',
+setup (name='hijra', version='1.0',
       description='Hijri Islamic Calendar',
       author='Muayyad Saleh Alsadi',
       author_email='alsadi@ojuba.org',

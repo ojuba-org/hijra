@@ -4,16 +4,16 @@ Name: hijra
 Summary: Hijri Islamic Calendar
 Summary(ar): التّقويم الهجري الإسلامي
 URL: http://ojuba.org
-Version: 0.4.1
+Version: 1.0
 Release: 1%{?dist}
 Source0: https://github.com/%{owner}/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
 License: WAQFv2
 BuildArch: noarch
-Requires: python
+Requires: python3
 Requires: pygobject3 >= 3.0.2
 BuildRequires: gettext
-BuildRequires: python2-devel
-BuildRequires: python-setuptools
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
 
 %description
 Hijra provides Hijri/Islamic Calendar routines and utils in python.
@@ -32,20 +32,20 @@ Using all Hijra operations in terminal.
 %description -n hijri -l ar
 جميع خصائص برنامج هجرة في الطّرفية.
 
-%package -n python-hijra
+%package -n python3-hijra
 Summary: Hijri functions for python
 Summary(ar): وظائف هجرة لبيثون
 BuildArch: noarch
-Requires: python
+Requires: python3
 Requires: setuptool
 
-%description -n python-hijra
+%description -n python3-hijra
 Hijri Islamic Calendar converting functions,
 an enhanced algorithm designed by Muayyad
 Saleh Alsadi, it can be used to implement apps,
 gdesklets or karamba ..etc
 
-%description -n python-hijra -l ar
+%description -n python3-hijra -l ar
 الوظائف التّحويلية للتّقويم الهجري الإسلامي بخوارزمية مُحسّنة
 مُصمّمة بواسطة مؤيّد صالح السّعدي، يُمكن استخدامها و غرسها في
 أدوات سطح المكتب مثل كارامبا .. و غيره.
@@ -54,11 +54,11 @@ gdesklets or karamba ..etc
 Summary: Hijri Tray Applet
 Summary(ar): بريمج هجرة لصينية النّظام
 BuildArch: noarch
-Requires: python
+Requires: python3
 Requires: pygtk2
-Requires: notify-python
+Requires: python3-notify
 Requires: desktop-notification-daemon
-Requires: python-hijra
+Requires: python3-hijra
 Requires: desktop-file-utils
 
 %description applet
@@ -88,7 +88,7 @@ Hijri Tray Applet as GNOME shell extension.
 # No thing to Build.
 
 %install
-%{__python2} setup.py install \
+%{__python3} setup.py install \
         --root=%{buildroot} \
         --optimize=2
 mkdir %{buildroot}/%{_datadir}/HijriTerminal/
@@ -106,10 +106,10 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 %{_bindir}/هجري
 %{_mandir}/*/hijri.*
 
-%files -n python-hijra
+%files -n python3-hijra
 %license waqf2-ar.pdf
 %{_datadir}/doc/hijra-python/*
-%{python2_sitelib}/*
+%{python3_sitelib}/*
 
 %files applet
 %license waqf2-ar.pdf
@@ -122,6 +122,9 @@ install -m 644 terminal/hijri.1.gz %{buildroot}%{_mandir}/man1
 %{_datadir}/gnome-shell/extensions/HijriApplet@ojuba.org/*
 
 %changelog
+- Thu Jan 16 2020 Mosaab Alzoubi <moceap[At]hotmail[Dot]com> - 1.0-1
+- New generation with Python3
+
 * Wed Feb 1 2017 Mosaab Alzoubi <moceap@hotmail.com> - 0.4.1-1
 - Support running under Wayland
 - Fix Hijri errors

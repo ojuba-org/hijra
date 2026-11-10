@@ -54,6 +54,30 @@ __a_const=48
 __hijri_epoch=227015; # = Julian 0622-7-16 = gregorian 0759-6-11 (I think it should be 622, 7, 19)
 # TODO: Why does the the hijri_epoch 227015 does not give the expected value when converted to gregorian
 
+# Umm al-Qura table support: inside the table range (1343-1500 AH) dates
+# follow the official Umm al-Qura calendar, outside it the arithmetic
+# algorithm below is used. Call set_method("arithmetic") to disable the table.
+from bisect import bisect_right
+try: from hijra_uq import UQ_FIRST_YEAR, UQ_MONTH_STARTS
+except ImportError: UQ_FIRST_YEAR=0; UQ_MONTH_STARTS=()
+__use_uq=len(UQ_MONTH_STARTS)>1
+
+def set_method(method):
+   """Choose the calendar method: "ummalqura" (default, when table exists) or "arithmetic" """
+   global __use_uq
+   if method not in ("ummalqura", "arithmetic"): raise ValueError("unknown method %r" % (method,))
+   __use_uq=(method=="ummalqura" and len(UQ_MONTH_STARTS)>1)
+def get_method():
+   """Return the calendar method currently in use"""
+   if __use_uq: return "ummalqura"
+   return "arithmetic"
+def __uq_index(Y,M):
+   """Return index of month (Y,M) in Umm al-Qura table, or -1 if not covered"""
+   if not __use_uq: return -1
+   i=(Y-UQ_FIRST_YEAR)*12+M-1
+   if 0 <= i < len(UQ_MONTH_STARTS)-1 and 1 <= M <= 12: return i
+   return -1
+
 def get_consts():
    """Return a tuple of the 3 constants (p,q,a) used by this algothim, for debuging"""
    return (__p_const, __q_const, __a_const)
@@ -63,6 +87,8 @@ def get_epoch():
 
 def hijri_month_days(Y,M):
    """Return the number of days in a given hijri month M in a given Y"""
+   i=__uq_index(Y,M)
+   if i>=0: return UQ_MONTH_STARTS[i+1]-UQ_MONTH_STARTS[i]
    Mc = ( Y -1) *12 + M
    if (((Mc+ __a_const) * __p_const) % __q_const)  < __p_const : return 30
    else: return 29
@@ -76,6 +102,8 @@ def hijri_month_days(Y,M):
 
 def hijri_days_before_month(Y,M):
    """Return the number of days before a given moth M in a given year Y (0 for M=1)"""
+   i=__uq_index(Y,1)
+   if i>=0 and 1 <= M <= 13: return UQ_MONTH_STARTS[i+M-1]-UQ_MONTH_STARTS[i]
    Mc = ( Y -1) *12 + 1 + __a_const
    McM=Mc * __p_const
    sum=0
@@ -116,13 +144,15 @@ def hijri_day_number (Y, M, D):
 # correct implementation # TODO: optimize it more and test that after optimization
 def hijri_to_absolute (Y, M, D):
    """Return absolute date of Hijri (Y,M,D), eg. ramadan (9),1,1427 -> 732578 """   
+   i=__uq_index(Y,M)
+   if i>=0: return UQ_MONTH_STARTS[i]+D-1
    Mc=(Y-1)*12
    # day count=days before Hijra plus (...)
    dc=__hijri_epoch
    # plus days in the years before till first multiples of q plus (...)
    Mc-=Mc % __q_const
-   y=int(Y-Mc/12)
-   dc+=int(Mc*29 + Mc*__p_const/__q_const)
+   y=Y-Mc//12
+   dc+=Mc*29 + Mc*__p_const//__q_const
    # plus those after the multiples plus (...)
    for i in range(1,y): dc+=hijri_year_days(i)
    # plus days from the begining of that year
@@ -131,7 +161,7 @@ def hijri_to_absolute (Y, M, D):
 
 def hijri_month_days_(y,m):
    """Return the number of days in a given hijri month M in a given Y"""
-   return hijri_to_absolute(y+m/12,m%12+1,1)-hijri_to_absolute(y,m,1)
+   return hijri_to_absolute(y+m//12,m%12+1,1)-hijri_to_absolute(y,m,1)
 
 # TEST: PASSED
 #def test_hijri_to_absolute_v_month_days():
@@ -166,8 +196,11 @@ def hijri_month_days_(y,m):
 def absolute_to_hijri (date):
    """Return Hijri date (Y,M,D) corresponding to the given absolute number of days."""
    if date < __hijri_epoch: return None; # pre-Islamic date
-   Mc=int((date-__hijri_epoch+1)*__q_const/(29*__q_const+__p_const))
-   Y=int(Mc/12)+1; M=(Mc%12)+1
+   if __use_uq and UQ_MONTH_STARTS[0] <= date < UQ_MONTH_STARTS[-1]:
+     i=bisect_right(UQ_MONTH_STARTS, date)-1
+     return (UQ_FIRST_YEAR+i//12, i%12+1, date-UQ_MONTH_STARTS[i]+1)
+   Mc=(date-__hijri_epoch+1)*__q_const//(29*__q_const+__p_const)
+   Y=Mc//12+1; M=(Mc%12)+1
    # consistency check
    d=hijri_to_absolute(Y,M,1) # TODO: this is an expensive call
    if (date < d): # go one month back if needed
@@ -194,10 +227,14 @@ def hijri_day_of_week (Y, M, D):
 
 def hijri_to_gregorian (year, month, day):
    """Return gregorian (year, month, day) converted from Islamic Hijri calender"""
+   if not (1 <= month <= 12 and 1 <= day <= hijri_month_days(year, month)):
+      raise ValueError("invalid hijri date: %d-%d-%d" % (year, month, day))
    return absolute_to_gregorian( hijri_to_absolute (year, month, day));
 
 def gregorian_to_hijri (year, month, day):
    """Return Hijri  (year, month, day) converted from gregorian calender"""
+   if not (1 <= month <= 12 and 1 <= day <= gregorian_month_days(year, month)):
+      raise ValueError("invalid gregorian date: %d-%d-%d" % (year, month, day))
    return absolute_to_hijri( gregorian_to_absolute (year, month, day));
 
 #///////////////////////////////////
@@ -231,13 +268,13 @@ def gregorian_day_number (year, month, day):
    """Return the day number within the year of the date (year,month, day)"""
    if month<3: return day + (31 * (month - 1));
    return day + (31 * (month - 1)) - \
-   ((month << 2) + 23) / 10 + (gregorian_leap_year_p (year) & 1);
+   ((month << 2) + 23) // 10 + (gregorian_leap_year_p (year) & 1);
 
 def gregorian_to_absolute (year, month, day):
    prior_years = year - 1;
    return gregorian_day_number (year, month, day) + \
    365 * prior_years + (prior_years >> 2) - \
-   (prior_years / 100) + (prior_years / 400);
+   (prior_years // 100) + (prior_years // 400);
 
 def absolute_to_gregorian(date):
    """return (year month day) corresponding to the absolute DATE.
@@ -249,13 +286,13 @@ Gregorian date Sunday, December 31, 1 BC."""
 # Clamen, Software--Practice and Experience, Volume 23, Number 4
 # (April, 1993), pages 383-404 for an explanation.
    d0 = date - 1;
-   n400 = int(d0 / 146097);
+   n400 = d0 // 146097;
    d1 = d0 % 146097;
-   n100 = int(d1 / 36524);
+   n100 = d1 // 36524;
    d2 = d1 % 36524;
-   n4 = int(d2 / 1461);
+   n4 = d2 // 1461;
    d3 = d2 % 1461;
-   n1 = int(d3 / 365);
+   n1 = d3 // 365;
    dd = (d3 % 365) + 1;
    yy = ((400 * n400) + (100 * n100) + (n4 * 4) + n1);
    if (n100 == 4) or (n1 == 4): return (yy, 12, 31);
